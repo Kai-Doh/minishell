@@ -10,7 +10,7 @@ MINISHELL = minishell
 
 # Compiler and Flags
 CC = gcc
-CFLAGS = -Werror -Wall -Wextra -g -I.
+CFLAGS = -Werror -Wall -Wextra -g -I. -lreadline
 
 # Source Files
 SRCS =	minishell.c\
@@ -21,33 +21,39 @@ OBJS = $(SRCS:.c=.o)
 # Commands
 RM = rm -rf
 
-# Targets
-all: $(PHILO)
+# Directories
+LIBFT_DIR = ./Libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
+# Targets
+all: $(LIBFT) $(MINISHELL)
+
+$(LIBFT):
+	@echo "$$(echo -e '$(BLUE)Building libft...$(RESET)')"
+	@$(MAKE) -C $(LIBFT_DIR) bonus
+	@echo "$$(echo -e '$(GREEN)✔ libft static library created.$(RESET)')"
 
 %.o: %.c
 	@echo "$$(echo -e '$(BLUE)Compiling $<...$(RESET)')"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-
-$(MINISHELL): $(OBJS)
+$(MINISHELL): $(OBJS) $(LIBFT)
 	@echo "$$(echo -e '$(BLUE)Linking $(MINISHELL)...$(RESET)')"
-	@$(CC) $(CFLAGS) $(OBJS) -o $(MINISHELL)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(MINISHELL)
 	@echo "$$(echo -e '$(GREEN)✔ $(MINISHELL) executable created.$(RESET)')"
-
 
 clean:
 	@echo "$$(echo -e '$(RED)Cleaning object files...$(RESET)')"
 	@$(RM) $(OBJS)
+	@$(MAKE) -C $(LIBFT_DIR) clean
 	@echo "$$(echo -e '$(GREEN)✔ Object files removed.$(RESET)')"
-
 
 fclean: clean
 	@echo "$$(echo -e '$(RED)Removing $(MINISHELL)...$(RESET)')"
-	@$(RM) $(PHILO)
+	@$(RM) $(MINISHELL)
+	@$(MAKE) -C $(LIBFT_DIR) fclean
 	@echo "$$(echo -e '$(GREEN)✔ $(MINISHELL) removed.$(RESET)')"
 	@echo "$$(echo -e '$(GREEN)✔ Full clean complete.$(RESET)')"
-
 
 re: fclean all
 
