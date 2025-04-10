@@ -1,14 +1,9 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/10/01 01:12:25 by ktiomico          #+#    #+#              #
-#    Updated: 2024/10/05 14:13:48 by ktiomico         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+# Colors
+RESET = \033[0m
+GREEN = \033[32m
+BLUE = \033[34m
+YELLOW = \033[33m
+RED = \033[31m
 
 SRCS =	ft_atoi.c \
 		ft_bzero.c \
@@ -66,26 +61,26 @@ CFLAGS = -Wall -Wextra -Werror -I.
 RM = rm -rf
 AR = ar rc
 
+MAKEFLAGS += --no-print-directory
+
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	@$(AR) $(NAME) $(OBJS)
-	@echo "Library $(NAME) created."
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 bonus: $(OBJS) $(OBJS_BONUS)
 	@$(AR) $(NAME) $(OBJS) $(OBJS_BONUS)
-	@echo "Library $(NAME) with bonus created."
 
 clean:
 	@$(RM) $(OBJS) $(OBJS_BONUS)
-	@echo "Object files removed."
+	@echo "$$(echo -e '$(RED)Libft object files removed.$(RESET)')"
 
 fclean: clean
 	@$(RM) $(NAME)
-	@echo "Library $(NAME) and object files removed."
+	@echo "$$(echo -e '$(GREEN)✔ Library $(NAME) and object files removed.$(RESET)')"
 
 re: fclean all
 
