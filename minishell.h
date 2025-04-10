@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/10 17:15:29 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/10 18:13:53 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ typedef struct s_data
 }	t_data;
 
 void	exit_msg(char *msg, int code);
+char	*prompt(void);
 
 #endif

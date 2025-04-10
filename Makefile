@@ -15,6 +15,7 @@ CFLAGS = -Werror -Wall -Wextra -g -I. -lreadline
 # Source Files
 SRCS =	minishell.c\
 		utils.c\
+		prompt.c\
 
 # Object Files (automatically generated from SRCS)
 OBJS = $(SRCS:.c=.o)
