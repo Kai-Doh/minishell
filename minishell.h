@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/10 13:41:54 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/10 14:05:05 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,15 @@
 # include "./Libft/libft.h"
 
 
-# define RED	"\e[31m"
-# define GREEN	"\e[32m"
-# define PURPLE	"\e[35m"
-# define CYAN	"\e[36m"
-# define RESET	"\e[0m"
+# define BLACK   "\e[30m"
+# define RED     "\e[31m"
+# define GREEN   "\e[32m"
+# define YELLOW  "\e[33m"
+# define BLUE    "\e[34m"
+# define PURPLE  "\e[35m"
+# define CYAN    "\e[36m"
+# define WHITE   "\e[37m"
+# define RESET   "\e[0m"
 
 
 #endif
