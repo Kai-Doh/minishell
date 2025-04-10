@@ -6,14 +6,11 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 10:42:20 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/10 13:49:35 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:59:20 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 
 int main(void)
 {
