@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/10 18:13:53 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/13 23:32:42 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 # define WHITE  "\e[37m"
 # define RESET  "\e[0m"
 
-# define ARGS	"This program does not allow any arguments!"
+# define ARGS	"ERROR: This program does not allow any arguments!"
 
 typedef struct s_data
 {
