@@ -10,14 +10,15 @@ MINISHELL = minishell
 
 # Compiler and Flags
 CC = gcc
-CFLAGS = -Werror -Wall -Wextra -g -I. -lreadline
+CFLAGS = -Werror -Wall -Wextra -g -I.
+LDFLAGS = -lreadline
 
 # Source Files
 SRCS =	minishell.c\
 		utils.c\
 		prompt.c\
 
-# Object Files (automatically generated from SRCS)
+# Object Files (automatiquement générés à partir de SRCS)
 OBJS = $(SRCS:.c=.o)
 
 # Commands
@@ -41,7 +42,7 @@ $(LIBFT):
 
 $(MINISHELL): $(OBJS) $(LIBFT)
 	@echo "$$(echo -e '$(BLUE)Linking $(MINISHELL)...$(RESET)')"
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(MINISHELL)
+	@$(CC) $(OBJS) $(LIBFT) -o $(MINISHELL) $(LDFLAGS)
 	@echo "$$(echo -e '$(GREEN)✔ $(MINISHELL) executable created.$(RESET)')"
 
 clean:
