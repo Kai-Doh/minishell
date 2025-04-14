@@ -3,21 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: thofstet <thofstet@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 10:42:20 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/10 18:25:22 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/14 18:24:58 by thofstet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "minishell.h"
 
-int	handle_input(char *rl)
+int	handle_input(char *rl, char **env)
 {
 	if (ft_strncmp(rl, "exit", 4) == 0)
 		return (1);
+	if (ft_strncmp(rl, "ls", 2) == 0)
+	{
+		execute_ls(env);
+		return (0);
+	}
 	printf(PURPLE "42\n" RESET);
 	return (0);
 }
@@ -37,7 +40,7 @@ void	start_shell_loop(char **env)
 		free(prompt_str);
 		if (!rl)
 			break ;
-		if (handle_input(rl))
+		if (handle_input(rl, env))
 		{
 			free(rl);
 			break ;
