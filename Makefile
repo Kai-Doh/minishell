@@ -1,61 +1,54 @@
-# Colors
-RESET = \033[0m
-GREEN = \033[32m
-BLUE = \033[34m
+# Colours (only used with printf, safe in dash)
+RESET  = \033[0m
+GREEN  = \033[32m
+BLUE   = \033[34m
 YELLOW = \033[33m
-RED = \033[31m
+RED    = \033[31m
 
-# Executables
-MINISHELL = minishell
+# Executable
+NAME   = minishell
 
-# Compiler and Flags
-CC = gcc
-CFLAGS = -Werror -Wall -Wextra -g -I. -lreadline
+# Compiler / flags
+CC      = gcc
+CFLAGS  = -Wall -Wextra -Werror -g -I.
+LDLIBS  = -lreadline -lhistory -lncurses   # or -ltermcap
 
-# Source Files
-SRCS =	minishell.c\
-		utils.c\
-		prompt.c\
-
-# Object Files (automatically generated from SRCS)
+# Sources / objects
+SRCS = minishell.c utils.c prompt.c lexertemp.c pipe.c cmd.c utils2.c
 OBJS = $(SRCS:.c=.o)
 
-# Commands
-RM = rm -rf
-
-# Directories
+# libft
 LIBFT_DIR = ./Libft
-LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT     = $(LIBFT_DIR)/libft.a
 
-# Targets
-all: $(LIBFT) $(MINISHELL)
+# Rules
+all: $(LIBFT) $(NAME)
 
 $(LIBFT):
-	@echo "$$(echo -e '$(BLUE)Building libft...$(RESET)')"
+	@printf "$(BLUE)Building libft...$(RESET)\n"
 	@$(MAKE) -C $(LIBFT_DIR) bonus
-	@echo "$$(echo -e '$(GREEN)✔ libft static library created.$(RESET)')"
+	@printf "$(GREEN)✓ libft built.$(RESET)\n"
 
 %.o: %.c
-	@echo "$$(echo -e '$(BLUE)Compiling $<...$(RESET)')"
+	@printf "$(BLUE)Compiling $<...$(RESET)\n"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(MINISHELL): $(OBJS) $(LIBFT)
-	@echo "$$(echo -e '$(BLUE)Linking $(MINISHELL)...$(RESET)')"
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(MINISHELL)
-	@echo "$$(echo -e '$(GREEN)✔ $(MINISHELL) executable created.$(RESET)')"
+$(NAME): $(OBJS) $(LIBFT)
+	@printf "$(BLUE)Linking $(NAME)...$(RESET)\n"
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDLIBS) -o $(NAME)
+	@printf "$(GREEN)✓ $(NAME) created.$(RESET)\n"
 
 clean:
-	@echo "$$(echo -e '$(RED)Cleaning object files...$(RESET)')"
+	@printf "$(RED)Cleaning object files...$(RESET)\n"
 	@$(RM) $(OBJS)
 	@$(MAKE) -C $(LIBFT_DIR) clean
-	@echo "$$(echo -e '$(GREEN)✔ Object files removed.$(RESET)')"
+	@printf "$(GREEN)✓ Objects removed.$(RESET)\n"
 
 fclean: clean
-	@echo "$$(echo -e '$(RED)Removing $(MINISHELL)...$(RESET)')"
-	@$(RM) $(MINISHELL)
+	@printf "$(RED)Removing $(NAME)...$(RESET)\n"
+	@$(RM) $(NAME)
 	@$(MAKE) -C $(LIBFT_DIR) fclean
-	@echo "$$(echo -e '$(GREEN)✔ $(MINISHELL) removed.$(RESET)')"
-	@echo "$$(echo -e '$(GREEN)✔ Full clean complete.$(RESET)')"
+	@printf "$(GREEN)✓ Full clean done.$(RESET)\n"
 
 re: fclean all
 
