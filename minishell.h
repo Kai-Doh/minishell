@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: thofstet <thofstet@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/10 18:13:53 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/22 05:51:00 by thofstet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,7 @@ typedef struct s_data
 
 void	exit_msg(char *msg, int code);
 char	*prompt(void);
+void    execute_ls(char **env);
+
 
 #endif
