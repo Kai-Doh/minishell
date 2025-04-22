@@ -6,7 +6,7 @@
 /*   By: thofstet <thofstet@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/22 05:51:00 by thofstet         ###   ########.fr       */
+/*   Updated: 2025/04/22 06:11:14 by thofstet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,38 @@
 # define WHITE  "\e[37m"
 # define RESET  "\e[0m"
 
-# define ARGS	"This program does not allow any arguments!"
+# define ARGS	"ERROR: This program does not allow any arguments!"
 
-typedef struct s_data
-{
-}	t_data;
+typedef enum e_type {
+	WORD,
+	PIPE,
+	END
+}	t_type;
+
+typedef struct s_token {
+	char			*content;
+	t_type		type;
+	struct s_token	*next;
+}	t_token;
+
+typedef struct s_cmd {
+	char			**av;
+	struct s_cmd	*next;
+}	t_cmd;
+
 
 void	exit_msg(char *msg, int code);
 char	*prompt(void);
-void    execute_ls(char **env);
-
+t_token *lexer(char *line);
+void	ft_tokclear(t_token **lst);
+char	**tok_to_argv(t_token *tok, int *argc, t_token **next);
+bool	tok_is_builtin_exit(t_token *tok);
+int		exec_pipeline(t_token *tok_lst, char **env);
+char	*find_cmd_path(char *cmd, char **env);
+void	ft_split_free(char **arr);
+bool    is_special(char c);
+int		ft_isspace(int c);
+t_token	*tok_new(char *val, t_type type);
+void	tok_add_back(t_token **lst, t_token *new);
 
 #endif

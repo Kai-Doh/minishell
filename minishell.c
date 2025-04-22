@@ -6,31 +6,35 @@
 /*   By: thofstet <thofstet@42>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 10:42:20 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/14 18:24:58 by thofstet         ###   ########.fr       */
+/*   Updated: 2025/04/22 06:12:02 by thofstet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_input(char *rl, char **env)
+static int	handle_input(char *rl, char **env)
 {
-	if (ft_strncmp(rl, "exit", 4) == 0)
-		return (1);
-	if (ft_strncmp(rl, "ls", 2) == 0)
-	{
-		execute_ls(env);
+	t_token	*tok;
+
+	tok = lexer(rl);
+	if (!tok)
 		return (0);
+	if (tok_is_builtin_exit(tok))
+	{
+		ft_tokclear(&tok);
+		return (1);
 	}
-	printf(PURPLE "42\n" RESET);
+	exec_pipeline(tok, env);
+	ft_tokclear(&tok);
 	return (0);
 }
+
 
 void	start_shell_loop(char **env)
 {
 	char	*rl;
 	char	*prompt_str;
 
-	(void)env;
 	while (1)
 	{
 		prompt_str = prompt();
@@ -51,10 +55,8 @@ void	start_shell_loop(char **env)
 
 int	main(int argc, char **argv, char **env)
 {
-	t_data	data;
 
 	(void)argv;
-	(void)data;
 	if (argc != 1)
 		exit_msg(ARGS, ERROR);
 	start_shell_loop(env);
