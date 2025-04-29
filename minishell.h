@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/17 13:59:27 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:26:52 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@
 # include <sys/wait.h>
 # include "./Libft/libft.h"
 
+/* ************************************************************************** */
+/*                                    Macros                                  */
+/* ************************************************************************** */
+
 # define ERROR	1
 
 # define BLACK	"\e[30m"
@@ -42,36 +46,100 @@
 
 # define ARGS	"ERROR: This program does not allow any arguments!"
 
-typedef enum e_type {
+/* ************************************************************************** */
+/*                              Structure & Enum                              */
+/* ************************************************************************** */
+
+typedef enum e_type
+{
 	WORD,
 	PIPE,
+	REDIR_IN,
+	REDIR_OUT,
+	HEREDOC,
+	APPEND,
 	END
 }	t_type;
 
-typedef struct s_token {
+typedef struct s_token
+{
 	char			*content;
-	t_type		type;
+	t_type			type;
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_cmd {
-	char			**av;
+typedef struct s_redir
+{
+	t_type			type;
+	char			*file;
+	struct s_redir	*next;
+}	t_redir;
+
+typedef struct s_cmd
+{
+	char			**args;
+	t_redir			*redir;
 	struct s_cmd	*next;
 }	t_cmd;
 
 
+/* ************************************************************************** */
+/*                              Prompt + Boucle                               */
+/* ************************************************************************** */
+
+void	start_shell_loop(char **env);
+
+/* ************************************************************************** */
+/*                                    Lexer                                   */
+/* ************************************************************************** */
+
+t_token	*lexer(char *line);
+void	free_tokens(t_token *tok);
+
+/* ************************************************************************** */
+/*                                    Parser                                  */
+/* ************************************************************************** */
+
+t_cmd	*parse(t_token *tok);
+void	free_cmds(t_cmd *cmd);
+
+/* ************************************************************************** */
+/*                                    Execution                               */
+/* ************************************************************************** */
+
+int		execute(t_cmd *cmd, char **env);
+
+/* ************************************************************************** */
+/*                                 Redirections                               */
+/* ************************************************************************** */
+
+void	handle_redir(t_redir *r);
+void	do_redir_in(t_redir *r);
+void	do_redir_out(t_redir *r);
+void	do_redir_append(t_redir *r);
+void	do_heredoc(t_redir *r);
+
+/* ************************************************************************** */
+/*                                   HEREDOC                                  */
+/* ************************************************************************** */
+
+int		create_heredoc(char *delimiter);
+
+/* ************************************************************************** */
+/*                                   PATH                                     */
+/* ************************************************************************** */
+
+char	*find_command_path(char *cmd, char **env);
+char	*get_path_variable(char **env);
+char	*join_path(char *dir, char *cmd);
+void	ft_free_split(char **arr);
+
+/* ************************************************************************** */
+/*                                   UTILS                                    */
+/* ************************************************************************** */
+
 void	exit_msg(char *msg, int code);
-char	*prompt(void);
-t_token *lexer(char *line);
-void	ft_tokclear(t_token **lst);
-char	**tok_to_argv(t_token *tok, int *argc, t_token **next);
-bool	tok_is_builtin_exit(t_token *tok);
-int		exec_pipeline(t_token *tok_lst, char **env);
-char	*find_cmd_path(char *cmd, char **env);
-void	ft_split_free(char **arr);
-bool    is_special(char c);
-int		ft_isspace(int c);
-t_token	*tok_new(char *val, t_type type);
-void	tok_add_back(t_token **lst, t_token *new);
+void	free_tokens(t_token *tok);
+void	free_cmds(t_cmd *cmd);
 
 #endif

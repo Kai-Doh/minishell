@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 17:04:16 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/17 13:49:44 by ktiomico         ###   ########.fr       */
+/*   Created: 2025/04/29 14:21:45 by ktiomico          #+#    #+#             */
+/*   Updated: 2025/04/29 14:26:39 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,57 +14,47 @@
 
 void	exit_msg(char *msg, int code)
 {
-	printf(RED "%s\n", msg);
+	ft_putstr_fd("minishell: ", 2);
+	ft_putendl_fd(msg, 2);
 	exit(code);
 }
 
-void	ft_tokclear(t_token **lst)
+void	free_tokens(t_token *tok)
 {
 	t_token	*tmp;
 
-	if (!lst || !*lst)
-		return ;
-	while (*lst)
+	while (tok)
 	{
-		tmp = (*lst)->next;
-		free((*lst)->content);
-		free(*lst);
-		*lst = tmp;
+		tmp = tok->next;
+		free(tok->content);
+		free(tok);
+		tok = tmp;
 	}
 }
 
-bool	tok_is_builtin_exit(t_token *tok)
+void	free_cmds(t_cmd *cmd)
 {
-	if (!tok || tok->type != WORD)
-		return (false);
-	if (!tok->next)
-		return (ft_strncmp(tok->content, "exit", 5) == 0);
-	return (false);
-}
+	t_cmd		*tmp;
+	t_redir		*r;
+	t_redir		*r_next;
+	int			i;
 
-char	**tok_to_argv(t_token *tok, int *has_pipe, t_token **next)
-{
-	int		wc;
-	t_token	*tmp;
-	char	**argv;
-
-	tmp = tok;
-	wc = 0;
-	while (tmp && tmp->type == WORD && ++wc)
-		tmp = tmp->next;
-	argv = ft_calloc(wc + 1, sizeof(char *));
-	if (!argv)
-		return (NULL);
-	wc = 0;
-	while (tok && tok->type == WORD)
+	while (cmd)
 	{
-		argv[wc++] = tok->content;
-		tok = tok->next;
+		tmp = cmd->next;
+		i = 0;
+		while (cmd->args && cmd->args[i])
+			free(cmd->args[i++]);
+		free(cmd->args);
+		r = cmd->redir;
+		while (r)
+		{
+			r_next = r->next;
+			free(r->file);
+			free(r);
+			r = r_next;
+		}
+		free(cmd);
+		cmd = tmp;
 	}
-	*has_pipe = (tok && tok->type == PIPE);
-	if (*has_pipe)
-		*next = tok->next;
-	else
-		*next = tok;
-	return (argv);
 }
