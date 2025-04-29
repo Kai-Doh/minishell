@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 14:26:52 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:51:04 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,5 +141,12 @@ void	ft_free_split(char **arr);
 void	exit_msg(char *msg, int code);
 void	free_tokens(t_token *tok);
 void	free_cmds(t_cmd *cmd);
+
+/* ************************************************************************** */
+/*                                   SIGNALS                                  */
+/* ************************************************************************** */
+
+void	setup_signals(void);
+void	sigint_handler(int sig);
 
 #endif

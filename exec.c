@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 13:58:26 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 14:19:46 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:51:48 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,11 @@ static void	pipe_and_fork(t_cmd *cmd, char **env, int *in)
 	if (pid < 0)
 		exit_msg("Fork failed", 1);
 	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		child_process(cmd, env, *in, out);
+	}
 	if (*in != STDIN_FILENO)
 		close(*in);
 	if (cmd->next)

@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 10:42:20 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 14:53:17 by ktiomico         ###   ########.fr       */
+/*   Created: 2025/04/29 14:49:07 by ktiomico          #+#    #+#             */
+/*   Updated: 2025/04/29 14:49:22 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **env)
+void	sigint_handler(int sig)
 {
-	(void)argv;
-	if (argc != 1)
-		exit_msg(ARGS, ERROR);
-	setup_signals();
-	start_shell_loop(env);
-	return (0);
+	(void)sig;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void	setup_signals(void)
+{
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
