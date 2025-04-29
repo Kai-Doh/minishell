@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 13:59:21 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 14:34:30 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/29 15:30:48 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,11 @@ int	create_heredoc(char *delimiter)
 	}
 	close(fd[1]);
 	waitpid(pid, &status, 0);
-	if (status != 0)
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 	{
 		close(fd[0]);
 		return (-1);
 	}
+
 	return (fd[0]);
 }

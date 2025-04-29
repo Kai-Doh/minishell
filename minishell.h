@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 14:51:04 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/29 15:47:13 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,5 +148,18 @@ void	free_cmds(t_cmd *cmd);
 
 void	setup_signals(void);
 void	sigint_handler(int sig);
+
+/* ************************************************************************** */
+/*                                   BUILTINS                                 */
+/* ************************************************************************** */
+
+int	is_builtin(char *cmd);
+int	run_builtin(t_cmd *cmd, char **env);
+int	ft_pwd(void);
+int	ft_cd(char **args, char **env);
+int	ft_echo(char **args);
+int	ft_exit(char **args);
+
+
 
 #endif

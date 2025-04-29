@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 13:58:26 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 14:51:48 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/29 15:51:41 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ static void	exec_cmd(t_cmd *cmd, char **env)
 
 static void	child_process(t_cmd *cmd, char **env, int in, int out)
 {
+	handle_redir(cmd->redir);
+	if (is_builtin(cmd->args[0]))
+		exit(run_builtin(cmd, env));
 	if (in != STDIN_FILENO)
 	{
 		dup2(in, STDIN_FILENO);
@@ -43,7 +46,6 @@ static void	child_process(t_cmd *cmd, char **env, int in, int out)
 		dup2(out, STDOUT_FILENO);
 		close(out);
 	}
-	handle_redir(cmd->redir);
 	exec_cmd(cmd, env);
 }
 
@@ -78,6 +80,9 @@ int	execute(t_cmd *cmd, char **env)
 {
 	int	in;
 
+	if (cmd && !cmd->next && is_builtin(cmd->args[0]))
+		return (run_builtin(cmd, env));
+
 	in = STDIN_FILENO;
 	while (cmd)
 	{
@@ -88,3 +93,4 @@ int	execute(t_cmd *cmd, char **env)
 		;
 	return (0);
 }
+
