@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thofstet <thofstet@42>                     +#+  +:+       +#+        */
+/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 10:42:20 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/05/07 18:03:44 by thofstet         ###   ########.fr       */
+/*   Created: 2025/04/29 15:36:32 by ktiomico          #+#    #+#             */
+/*   Updated: 2025/04/29 15:36:44 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **env)
+int	ft_pwd(void)
 {
-	char	**envp;
+	char	cwd[4096];
 
-	(void)argv;
-	if (argc != 1)
-		exit_msg(ARGS, ERROR);
-	envp = copy_env(env);
-	if (!envp)
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		ft_putendl_fd("minishell: failed to copy environment", 2);
+		perror("pwd");
 		return (1);
 	}
-	setup_signals();
-	start_shell_loop(envp);
-	free_env(envp);
+	ft_putendl_fd(cwd, STDOUT_FILENO);
 	return (0);
 }

@@ -1,0 +1,96 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/29 13:58:26 by ktiomico          #+#    #+#             */
+/*   Updated: 2025/04/29 15:51:41 by ktiomico         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+static void	exec_cmd(t_cmd *cmd, char **env)
+{
+	char	*path;
+
+	if (!cmd->args || !cmd->args[0])
+		exit(0);
+	path = find_command_path(cmd->args[0], env);
+	if (!path)
+	{
+		ft_putstr_fd("minishell: command not found: ", 2);
+		ft_putendl_fd(cmd->args[0], 2);
+		exit(127);
+	}
+	execve(path, cmd->args, env);
+	perror(path);
+	free(path);
+	exit(126);
+}
+
+static void	child_process(t_cmd *cmd, char **env, int in, int out)
+{
+	handle_redir(cmd->redir);
+	if (is_builtin(cmd->args[0]))
+		exit(run_builtin(cmd, env));
+	if (in != STDIN_FILENO)
+	{
+		dup2(in, STDIN_FILENO);
+		close(in);
+	}
+	if (out != STDOUT_FILENO)
+	{
+		dup2(out, STDOUT_FILENO);
+		close(out);
+	}
+	exec_cmd(cmd, env);
+}
+
+static void	pipe_and_fork(t_cmd *cmd, char **env, int *in)
+{
+	int		fd[2];
+	pid_t	pid;
+	int		out;
+
+	if (cmd->next && pipe(fd) == -1)
+		exit_msg("Pipe error", 1);
+	out = cmd->next ? fd[1] : STDOUT_FILENO;
+	pid = fork();
+	if (pid < 0)
+		exit_msg("Fork failed", 1);
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		child_process(cmd, env, *in, out);
+	}
+	if (*in != STDIN_FILENO)
+		close(*in);
+	if (cmd->next)
+	{
+		close(fd[1]);
+		*in = fd[0];
+	}
+}
+
+int	execute(t_cmd *cmd, char **env)
+{
+	int	in;
+
+	if (cmd && !cmd->next && is_builtin(cmd->args[0]))
+		return (run_builtin(cmd, env));
+
+	in = STDIN_FILENO;
+	while (cmd)
+	{
+		pipe_and_fork(cmd, env, &in);
+		cmd = cmd->next;
+	}
+	while (wait(NULL) > 0)
+		;
+	return (0);
+}
+
