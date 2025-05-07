@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: thofstet <thofstet@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/01 00:56:07 by ktiomico          #+#    #+#             */
-/*   Updated: 2024/10/01 01:11:11 by ktiomico         ###   ########.fr       */
+/*   Created: 2025/05/07 17:49:24 by thofstet          #+#    #+#             */
+/*   Updated: 2025/05/07 17:50:54 by thofstet         ###   ########.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	*ft_strdup(const char *s)
 	dest[i] = '\0';
 	return (dest);
 }
+
 /*
 int	main(void)
 {

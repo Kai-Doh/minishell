@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatcher.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: thofstet <thofstet@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/29 15:37:41 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 15:46:45 by ktiomico         ###   ########.fr       */
+/*   Created: 2025/05/07 17:26:02 by thofstet          #+#    #+#             */
+/*   Updated: 2025/05/07 17:26:06 by thofstet         ###   ########.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	run_builtin(t_cmd *cmd, char **env)
 	if (!ft_strncmp(cmd->args[0], "echo", 5))
 		return (ft_echo(cmd->args));
 	if (!ft_strncmp(cmd->args[0], "cd", 3))
-		return (ft_cd(cmd->args, env));
+		return (ft_cd(cmd->args, &env));
 	if (!ft_strncmp(cmd->args[0], "pwd", 4))
 		return (ft_pwd());
 	if (!ft_strncmp(cmd->args[0], "exit", 5))

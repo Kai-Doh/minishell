@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: thofstet <thofstet@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 15:47:13 by ktiomico         ###   ########.fr       */
+/*   Created: 2025/05/07 17:54:56 by thofstet          #+#    #+#             */
+/*   Updated: 2025/05/07 17:54:56 by thofstet         ###   ########.ch       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_cmd
 }	t_cmd;
 
 
+
 /* ************************************************************************** */
 /*                              Prompt + Boucle                               */
 /* ************************************************************************** */
@@ -156,10 +157,17 @@ void	sigint_handler(int sig);
 int	is_builtin(char *cmd);
 int	run_builtin(t_cmd *cmd, char **env);
 int	ft_pwd(void);
-int	ft_cd(char **args, char **env);
+int	ft_cd(char **args, char ***envp);
 int	ft_echo(char **args);
 int	ft_exit(char **args);
 
+/* ************************************************************************** */
+/*                                   ENV	                                 */
+/* ************************************************************************** */
+
+void	update_env_var(char ***envp, const char *key, const char *value);
+char	**copy_env(char **env);
+void	free_env(char **env);
 
 
 #endif
