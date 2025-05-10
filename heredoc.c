@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: thofstet <thofstet>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/29 13:59:21 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 15:30:48 by ktiomico         ###   ########.fr       */
+/*   Created: 2025/05/10 17:18:43 by ktiomico          #+#    #+#             */
+/*   Updated: 2025/05/10 17:18:51 by thofstet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,5 @@ int	create_heredoc(char *delimiter)
 		close(fd[0]);
 		return (-1);
 	}
-
 	return (fd[0]);
 }

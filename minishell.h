@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thofstet <thofstet@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*   By: thofstet <thofstet>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 18:03:54 by thofstet          #+#    #+#             */
-/*   Updated: 2025/05/07 18:03:54 by thofstet         ###   ########.ch       */
+/*   Created: 2025/05/10 17:01:57 by ktiomico          #+#    #+#             */
+/*   Updated: 2025/05/10 17:28:33 by thofstet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,12 +154,12 @@ void	sigint_handler(int sig);
 /*                                   BUILTINS                                 */
 /* ************************************************************************** */
 
-int	is_builtin(char *cmd);
-int	run_builtin(t_cmd *cmd, char **env);
-int	ft_pwd(void);
-int	ft_cd(char **args, char ***envp);
-int	ft_echo(char **args);
-int	ft_exit(char **args);
+int		is_builtin(char *cmd);
+int		run_builtin(t_cmd *cmd, char **env);
+int		ft_pwd(void);
+int		ft_cd(char **args, char ***envp);
+int		ft_echo(char **args);
+int		ft_exit(char **args);
 
 /* ************************************************************************** */
 /*                                   ENV	                                 */
@@ -168,6 +168,5 @@ int	ft_exit(char **args);
 void	update_env_var(char ***envp, const char *key, const char *value);
 char	**copy_env(char **env);
 void	free_env(char **env);
-
 
 #endif

@@ -3,36 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thofstet <thofstet@42>                     +#+  +:+       +#+        */
+/*   By: thofstet <thofstet>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/13 18:08:22 by thofstet          #+#    #+#             */
-/*   Updated: 2025/04/14 18:31:39 by thofstet         ###   ########.fr       */
+/*   Created: 2025/05/10 17:19:31 by thofstet          #+#    #+#             */
+/*   Updated: 2025/05/10 17:24:52 by thofstet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    execute_ls(char **env)
+void	execute_ls(char **env)
 {
-    pid_t pid = fork();
-    if (pid < 0)
-    {
-        perror("fork error");
-        return;
-    }
-    else if (pid == 0) // Processus fils
-    {
-        char *args[] = {"ls", NULL};
-        if (execve("/bin/ls", args, env) == -1)
-        {
-            perror("execve error frérot");
-            exit(EXIT_FAILURE);
-        }
-    }
-    else
-    {
-        wait(NULL); // On attend la fin du processus fils
-    }
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork error");
+		return ;
+	}
+	else if (pid == 0)
+	{
+		char	*args[];
+		args[] = {"ls", NULL};
+		if (execve("/bin/ls", args, env) == -1)
+		{
+			perror("execve error frérot");
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		wait(NULL);
+	}
 }
 
 /*

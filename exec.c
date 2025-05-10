@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: thofstet <thofstet>                        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 13:58:26 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 15:51:41 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/05/10 17:18:02 by thofstet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ int	execute(t_cmd *cmd, char **env)
 
 	if (cmd && !cmd->next && is_builtin(cmd->args[0]))
 		return (run_builtin(cmd, env));
-
 	in = STDIN_FILENO;
 	while (cmd)
 	{
@@ -93,4 +92,3 @@ int	execute(t_cmd *cmd, char **env)
 		;
 	return (0);
 }
-
