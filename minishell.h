@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 22:34:30 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 15:47:13 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/05/26 11:58:48 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@
 /* ************************************************************************** */
 /*                              Structure & Enum                              */
 /* ************************************************************************** */
+
+extern char	**g_env;
 
 typedef enum e_type
 {
@@ -153,12 +155,18 @@ void	sigint_handler(int sig);
 /*                                   BUILTINS                                 */
 /* ************************************************************************** */
 
-int	is_builtin(char *cmd);
-int	run_builtin(t_cmd *cmd, char **env);
-int	ft_pwd(void);
-int	ft_cd(char **args, char **env);
-int	ft_echo(char **args);
-int	ft_exit(char **args);
+int		is_builtin(char *cmd);
+int		run_builtin(t_cmd *cmd, char **env);
+int		ft_pwd(void);
+int		ft_cd(char **args, char **env);
+int		ft_echo(char **args);
+int		ft_exit(char **args);
+int		ft_env(char **env);
+int		ft_export(char **args, char **env);
+int		ft_unset(char **args, char **env);
+char	**dup_env(char **env);
+char	**ft_strs_add(char **env, char *new_entry);
+char	**ft_strs_remove(char **env, int index);
 
 
 

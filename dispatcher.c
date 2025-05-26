@@ -6,7 +6,7 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 15:37:41 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/29 15:46:45 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/05/26 12:04:50 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	is_builtin(char *cmd)
 		|| !ft_strncmp(cmd, "cd", 3)
 		|| !ft_strncmp(cmd, "pwd", 4)
 		|| !ft_strncmp(cmd, "exit", 5)
-/*		|| !ft_strncmp(cmd, "env", 4)
+		|| !ft_strncmp(cmd, "env", 4)
 		|| !ft_strncmp(cmd, "export", 7)
-		|| !ft_strncmp(cmd, "unset", 6)*/);
+		|| !ft_strncmp(cmd, "unset", 6));
 }
 
 int	run_builtin(t_cmd *cmd, char **env)
@@ -37,11 +37,11 @@ int	run_builtin(t_cmd *cmd, char **env)
 		return (ft_pwd());
 	if (!ft_strncmp(cmd->args[0], "exit", 5))
 		return (ft_exit(cmd->args));
-/*	if (!ft_strncmp(cmd->args[0], "env", 4))
+	if (!ft_strncmp(cmd->args[0], "env", 4))
 		return (ft_env(env));
 	if (!ft_strncmp(cmd->args[0], "export", 7))
 		return (ft_export(cmd->args, env));
 	if (!ft_strncmp(cmd->args[0], "unset", 6))
-		return (ft_unset(cmd->args, env));*/
+		return (ft_unset(cmd->args, env));
 	return (1);
 }
