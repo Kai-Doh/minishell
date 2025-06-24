@@ -46,11 +46,13 @@ static int	handle_input(char *rl, t_shell *sh)
 	if (!rl || rl[0] == '\0')
 		return (0);
 	add_history(rl);
-	tokens = lexer(rl);
-	if (!tokens)
-	{
-		if (g_lexer_error)
-			sh->last_exit_status = 2;
+        tokens = NULL;
+        int err = 0;
+        tokens = lexer(rl, &err);
+        if (!tokens)
+        {
+                if (err)
+                        sh->last_exit_status = 2;
 		return (0);
 	}
 	cmds = parse(tokens, sh);

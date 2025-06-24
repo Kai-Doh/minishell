@@ -27,7 +27,7 @@ int	scan_token(char *s, int *i, int *in_s, int *in_d)
 	return (*in_s || *in_d);
 }
 
-char	*extract_token(char *s, int *i)
+char    *extract_token(char *s, int *i, int *error)
 {
 	int	start;
 	int	in_s;
@@ -49,7 +49,7 @@ char	*extract_token(char *s, int *i)
 		in_s = 0;
 		in_d = 0;
 		if (scan_token(s, i, &in_s, &in_d))
-			return (quote_error(in_s), NULL);
+			return (quote_error(in_s, error), NULL);
 	}
 	return (ft_substr(s, start, *i - start));
 }
