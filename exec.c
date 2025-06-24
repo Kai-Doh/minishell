@@ -31,22 +31,22 @@ static void	exec_cmd(t_cmd *cmd, char **env)
 	exit(126);
 }
 
-static void	child_process(t_cmd *cmd, char **env, int in, int out)
+static void child_process(t_cmd *cmd, char **env, int in, int out)
 {
-	handle_redir(cmd->redir);
-	if (is_builtin(cmd->args[0]))
-		exit(run_builtin(cmd, env));
-	if (in != STDIN_FILENO)
-	{
-		dup2(in, STDIN_FILENO);
-		close(in);
-	}
-	if (out != STDOUT_FILENO)
-	{
-		dup2(out, STDOUT_FILENO);
-		close(out);
-	}
-	exec_cmd(cmd, env);
+   if (in != STDIN_FILENO)
+   {
+      dup2(in, STDIN_FILENO);
+      close(in);
+   }
+   if (out != STDOUT_FILENO)
+   {
+      dup2(out, STDOUT_FILENO);
+      close(out);
+    }
+   handle_redir(cmd->redir);
+   if (is_builtin(cmd->args[0]))
+      exit(run_builtin(cmd, env));
+   exec_cmd(cmd, env);
 }
 
 static void	pipe_and_fork(t_cmd *cmd, char **env, int *in)
