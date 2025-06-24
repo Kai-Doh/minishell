@@ -19,7 +19,7 @@ t_token *lexer_loop(char *s, int *i, int *error)
     t_token *new;
     char    *val;
 
-    head = NULL;
+	head = NULL;
     val = extract_token(s, i, error);
     while (val != NULL)
     {

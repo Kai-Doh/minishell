@@ -21,20 +21,28 @@ void	start_shell_loop(t_shell *sh)
 	char	*prompt_str;
 
 	while (1)
-	{
+    {
+		g_signal = 0;
 		prompt_str = prompt();
 		if (!prompt_str)
 			continue ;
 		rl = readline(prompt_str);
 		free(prompt_str);
-		if (!rl)
-			break ;
-		if (handle_input(rl, sh))
-		{
-			free(rl);
-			break ;
-		}
-		free(rl);
+		if (g_signal == SIGINT)
+        {
+			sh->last_exit_status = 130;
+            g_signal = 0;
+            free(rl);
+            continue ;
+        }
+        if (!rl)
+            break ;
+        if (handle_input(rl, sh))
+        {
+            free(rl);
+            break ;
+        }
+        free(rl);
 	}
 }
 
@@ -46,13 +54,13 @@ static int	handle_input(char *rl, t_shell *sh)
 	if (!rl || rl[0] == '\0')
 		return (0);
 	add_history(rl);
-        tokens = NULL;
-        int err = 0;
-        tokens = lexer(rl, &err);
-        if (!tokens)
-        {
-                if (err)
-                        sh->last_exit_status = 2;
+    tokens = NULL;
+    int err = 0;
+    tokens = lexer(rl, &err);
+    if (!tokens)
+    {
+		if (err)
+			sh->last_exit_status = 2;
 		return (0);
 	}
 	cmds = parse(tokens, sh);

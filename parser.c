@@ -53,17 +53,24 @@ char	*expand_word(char *s, t_shell *sh)
 	in_d = 0;
 	res = ft_strdup("");
 	while (s && s[i])
-	{
-		if (s[i] == '\'' && in_d == 0)
-			in_s = 1 - in_s;
-		else if (s[i] == '"' && in_s == 0)
-			in_d = 1 - in_d;
-		else if (s[i] == '$' && in_s == 0)
-			handle_dollar_expand(&res, s, &i, sh);
-		else
-			res = append_char(res, s[i++]);
-		if (s[i - 1] == '\'' || s[i - 1] == '"')
-			i++;
-	}
+    {
+            if (s[i] == '\'' && in_d == 0)
+            {
+                    in_s = 1 - in_s;
+                    i++;
+            }
+            else if (s[i] == '"' && in_s == 0)
+            {
+                    in_d = 1 - in_d;
+                    i++;
+            }
+            else if (s[i] == '$' && in_s == 0)
+                    handle_dollar_expand(&res, s, &i, sh);
+            else
+            {
+                    res = append_char(res, s[i]);
+                    i++;
+            }
+    }
 	return (res);
 }
