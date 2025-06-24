@@ -11,14 +11,13 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-extern char **g_env;
 
-void	exit_msg(char *msg, int code)
+void    exit_msg(char *msg, int code, t_shell *sh)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putendl_fd(msg, 2);
-        if (g_env)
-                ft_free_split(g_env);
+        if (sh && sh->env)
+                ft_free_split(sh->env);
 	exit(code);
 }
 

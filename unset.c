@@ -12,22 +12,21 @@
 
 #include "minishell.h"
 
-int	ft_unset(char **args, char **env)
+int     ft_unset(char **args, t_shell *sh)
 {
 	int		i;
 	int		j;
 
-	(void)env;
 	i = 1;
 	while (args[i])
 	{
 		j = 0;
-		while (g_env[j])
+		while (sh->env[j])
 		{
-			if (!ft_strncmp(g_env[j], args[i], ft_strlen(args[i]))
-				&& g_env[j][ft_strlen(args[i])] == '=')
+			if (!ft_strncmp(sh->env[j], args[i], ft_strlen(args[i]))
+				&& sh->env[j][ft_strlen(args[i])] == '=')
 			{
-				g_env = ft_strs_remove(g_env, j);
+				sh->env = ft_strs_remove(sh->env, j);
 				break ;
 			}
 			j++;

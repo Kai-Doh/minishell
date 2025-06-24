@@ -17,6 +17,11 @@ int	ft_cd(char **args, char **env)
 	char	*target;
 	char	cwd[4096];
 
+        if (args[1] && args[2])
+        {
+                ft_putendl_fd("cd: too many arguments", 2);
+                return (1);
+        }
 	if (!args[1])
 	{
 		target = getenv("HOME");

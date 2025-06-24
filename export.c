@@ -28,7 +28,7 @@ static int	is_valid_key(char *str)
 	return (1);
 }
 
-static void	update_or_add(char *arg)
+static void     update_or_add(char *arg, t_shell *sh)
 {
 	char	*key;
 	char	*equal;
@@ -41,29 +41,29 @@ static void	update_or_add(char *arg)
 	if (!key)
 		return ;
 	i = 0;
-	while (g_env[i])
+	while (sh->env[i])
 	{
-		if (!ft_strncmp(g_env[i], key, ft_strlen(key))
-			&& g_env[i][ft_strlen(key)] == '=')
+		if (!ft_strncmp(sh->env[i], key, ft_strlen(key))
+			&& sh->env[i][ft_strlen(key)] == '=')
 		{
-			free(g_env[i]);
-			g_env[i] = ft_strdup(arg);
+			free(sh->env[i]);
+			sh->env[i] = ft_strdup(arg);
 			free(key);
 			return ;
 		}
 		i++;
 	}
 	free(key);
-	g_env = ft_strs_add(g_env, arg);
+	sh->env = ft_strs_add(sh->env, arg);
 }
 
-int	ft_export(char **args, char **env)
+int     ft_export(char **args, t_shell *sh)
 {
 	int	i;
 
-	(void)env;
+	(void)sh;
 	if (!args[1])
-		return (ft_env(g_env));
+		return (ft_env(sh->env));
 	i = 1;
 	while (args[i])
 	{
@@ -75,7 +75,7 @@ int	ft_export(char **args, char **env)
 			return (1);
 		}
 		if (ft_strchr(args[i], '='))
-			update_or_add(args[i]);
+			update_or_add(args[i], sh);
 		i++;
 	}
 	return (0);
