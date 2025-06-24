@@ -14,48 +14,48 @@
 
 void    exit_msg(char *msg, int code, t_shell *sh)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putendl_fd(msg, 2);
+    ft_putstr_fd("minishell: ", 2);
+    ft_putendl_fd(msg, 2);
         if (sh && sh->env)
                 ft_free_split(sh->env);
-	exit(code);
+    exit(code);
 }
 
-void	free_tokens(t_token *tok)
+void    free_tokens(t_token *tok)
 {
-	t_token	*tmp;
+    t_token    *tmp;
 
-	while (tok)
-	{
-		tmp = tok->next;
-		free(tok->content);
-		free(tok);
-		tok = tmp;
-	}
+    while (tok)
+    {
+        tmp = tok->next;
+        free(tok->content);
+        free(tok);
+        tok = tmp;
+    }
 }
 
-void	free_cmds(t_cmd *cmd)
+void    free_cmds(t_cmd *cmd)
 {
-	t_cmd		*tmp;
-	t_redir		*r;
-	t_redir		*r_next;
-	int			i;
+    t_cmd        *tmp;
+    t_redir        *r;
+    t_redir        *r_next;
+    int            i;
 
-	while (cmd)
-	{
-		tmp = cmd->next;
-		i = 0;
-		while (cmd->args && cmd->args[i])
-			free(cmd->args[i++]);
-		free(cmd->args);
-		r = cmd->redir;
-		while (r)
-		{
-			r_next = r->next;
-			free(r->file);
-			free(r);
-			r = r_next;
-		}
+    while (cmd)
+    {
+        tmp = cmd->next;
+        i = 0;
+        while (cmd->args && cmd->args[i])
+            free(cmd->args[i++]);
+        free(cmd->args);
+        r = cmd->redir;
+        while (r)
+        {
+            r_next = r->next;
+            free(r->file);
+            free(r);
+            r = r_next;
+        }
                 free(cmd);
                 cmd = tmp;
         }
@@ -100,8 +100,12 @@ char    **ft_args_add(char **arr, char *new_arg)
     new = malloc(sizeof(char *) * (count + 2));
     if (!new)
         return NULL;
-    for (int i = 0; i < count; i++)
+    int i = 0;
+    while (i < count)
+    {
         new[i] = arr[i];
+        i++;
+    }
     new[count] = new_arg;
     new[count + 1] = NULL;
     free(arr);
