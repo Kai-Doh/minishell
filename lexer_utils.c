@@ -28,7 +28,7 @@ int	is_special(char c)
 	return (0);
 }
 
-void    quote_error(int in_s, int *error)
+void	quote_error(int in_s, int *error)
 {
 	ft_putstr_fd("minishell: unexpected EOF while looking for matching '", 2);
 	if (in_s)
@@ -36,6 +36,6 @@ void    quote_error(int in_s, int *error)
 	else
 		ft_putchar_fd('"', 2);
 	ft_putendl_fd("'", 2);
-        if (error)
-                *error = 1;
+	if (error)
+		*error = 1;
 }

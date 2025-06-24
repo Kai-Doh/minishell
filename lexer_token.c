@@ -27,7 +27,7 @@ int	scan_token(char *s, int *i, int *in_s, int *in_d)
 	return (*in_s || *in_d);
 }
 
-char    *extract_token(char *s, int *i, int *error)
+char	*extract_token(char *s, int *i, int *error)
 {
 	int	start;
 	int	in_s;

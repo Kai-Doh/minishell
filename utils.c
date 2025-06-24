@@ -61,29 +61,29 @@ char	**ft_args_add(char **arr, char *new_arg)
 	return (new);
 }
 
-char    *strip_comments(char *line)
+char	*strip_comments(char *line)
 {
-        int     i;
-        int     in_s;
-        int     in_d;
+	int	i;
+	int	in_s;
+	int	in_d;
 
-        if (!line)
-                return (NULL);
-        i = 0;
-        in_s = 0;
-        in_d = 0;
-        while (line[i])
-        {
-                if (line[i] == '\'' && in_d == 0)
-                        in_s = 1 - in_s;
-                else if (line[i] == '"' && in_s == 0)
-                        in_d = 1 - in_d;
-                else if (line[i] == '#' && !in_s && !in_d)
-                {
-                        line[i] = '\0';
-                        break ;
-                }
-                i++;
-        }
-        return (line);
+	if (!line)
+		return (NULL);
+	i = 0;
+	in_s = 0;
+	in_d = 0;
+	while (line[i])
+	{
+		if (line[i] == '\'' && in_d == 0)
+			in_s = 1 - in_s;
+		else if (line[i] == '"' && in_s == 0)
+			in_d = 1 - in_d;
+		else if (line[i] == '#' && !in_s && !in_d)
+		{
+			line[i] = '\0';
+			break ;
+		}
+		i++;
+	}
+	return (line);
 }

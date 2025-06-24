@@ -40,46 +40,64 @@ static void	handle_dollar_expand(char **res, char *s, size_t *i, t_shell *sh)
 	}
 }
 
-char	*expand_word(char *s, t_shell *sh)
+static void	process_quote_state(char c, int *in_s, int *in_d)
 {
-	char	*res;
+	if (c == '\'' && *in_d == 0)
+		*in_s = 1 - *in_s;
+	else if (c == '"' && *in_s == 0)
+		*in_d = 1 - *in_d;
+}
+
+static void	process_expansion_logic(char **res, char *s, size_t *i, t_shell *sh)
+{
+	if (s[*i] == '$')
+	{
+		if (s[*i + 1] == '?' || ft_isalpha(s[*i + 1]) || s[*i + 1] == '_')
+			handle_dollar_expand(res, s, i, sh);
+		else
+		{
+			*res = append_char(*res, '$');
+			(*i)++;
+		}
+	}
+	else
+	{
+		*res = append_char(*res, s[*i]);
+		(*i)++;
+	}
+}
+
+static void	process_expansion(char **res, char *s, t_shell *sh)
+{
 	size_t	i;
 	int		in_s;
 	int		in_d;
 
-	res = NULL;
 	i = 0;
 	in_s = 0;
 	in_d = 0;
-	res = ft_strdup("");
 	while (s && s[i])
-    {
-            if (s[i] == '\'' && in_d == 0)
-            {
-                    in_s = 1 - in_s;
-                    i++;
-            }
-            else if (s[i] == '"' && in_s == 0)
-            {
-                    in_d = 1 - in_d;
-                    i++;
-            }
-            else if (s[i] == '$' && in_s == 0)
-            {
-                    if (s[i + 1] == '?' || ft_isalpha(s[i + 1])
-                            || s[i + 1] == '_')
-                            handle_dollar_expand(&res, s, &i, sh);
-                    else
-                    {
-                            res = append_char(res, '$');
-                            i++;
-                    }
-            }
-            else
-            {
-                    res = append_char(res, s[i]);
-                    i++;
-            }
-    }
+	{
+		if ((s[i] == '\'' && in_d == 0) || (s[i] == '"' && in_s == 0))
+		{
+			process_quote_state(s[i], &in_s, &in_d);
+			i++;
+		}
+		else if (s[i] == '$' && in_s == 0)
+			process_expansion_logic(res, s, &i, sh);
+		else
+		{
+			*res = append_char(*res, s[i]);
+			i++;
+		}
+	}
+}
+
+char	*expand_word(char *s, t_shell *sh)
+{
+	char	*res;
+
+	res = ft_strdup("");
+	process_expansion(&res, s, sh);
 	return (res);
 }
