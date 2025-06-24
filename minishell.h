@@ -48,5 +48,6 @@ typedef struct s_data
 
 void	exit_msg(char *msg, int code);
 char	*prompt(void);
+void	builtin_echo(char *arg);
 
 #endif

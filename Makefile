@@ -17,6 +17,7 @@ LDFLAGS = -lreadline
 SRCS =	minishell.c\
 		utils.c\
 		prompt.c\
+		echo.c\
 
 # Object Files (automatiquement générés à partir de SRCS)
 OBJS = $(SRCS:.c=.o)
