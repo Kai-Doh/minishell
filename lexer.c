@@ -32,28 +32,49 @@ static t_type	get_type(char *s)
 	return (WORD);
 }
 
-static char	*extract_token(char *s, int *i)
+
+static char     *extract_token(char *s, int *i)
 {
-	int		start;
+        int             start;
+        char    quote;
+        char    *raw;
 
-	while (is_space(s[*i]))
-		(*i)++;
-	start = *i;
-	if (!s[start])
-		return (NULL);
-	if (s[*i] == '<' || s[*i] == '>' || s[*i] == '|')
-	{
-		(*i)++;
-		if (s[*i] == s[start])
-			(*i)++;
-	}
-	else
-		while (s[*i] && !is_space(s[*i])
-			&& s[*i] != '<' && s[*i] != '>' && s[*i] != '|')
-			(*i)++;
-	return (ft_substr(s, start, *i - start));
+        while (is_space(s[*i]))
+                (*i)++;
+        start = *i;
+        if (!s[start])
+                return (NULL);
+        if (s[*i] == '<' || s[*i] == '>' || s[*i] == '|')
+        {
+                (*i)++;
+                if (s[*i] == s[start])
+                        (*i)++;
+        }
+        else
+        {
+                while (s[*i] && !is_space(s[*i])
+                        && s[*i] != '<' && s[*i] != '>' && s[*i] != '|')
+                {
+                        if (s[*i] == '\'' || s[*i] == '"')
+                        {
+                                quote = s[*i];
+                                (*i)++;
+                                while (s[*i] && s[*i] != quote)
+                                        (*i)++;
+                                if (s[*i] == quote)
+                                        (*i)++;
+                        }
+                        else
+                                (*i)++;
+                }
+        }
+        raw = ft_substr(s, start, *i - start);
+        if (!raw)
+                return (NULL);
+        s = remove_quotes(raw);
+        free(raw);
+        return (s);
 }
-
 t_token	*lexer(char *s)
 {
 	t_token	*head;
