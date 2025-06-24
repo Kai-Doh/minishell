@@ -31,8 +31,8 @@ int             run_builtin(t_cmd *cmd, t_shell *sh)
 		return (1);
 	if (!ft_strncmp(cmd->args[0], "echo", 5))
 		return (ft_echo(cmd->args));
-	if (!ft_strncmp(cmd->args[0], "cd", 3))
-		return (ft_cd(cmd->args, sh->env));
+        if (!ft_strncmp(cmd->args[0], "cd", 3))
+                return (ft_cd(cmd->args, sh));
 	if (!ft_strncmp(cmd->args[0], "pwd", 4))
 		return (ft_pwd());
 	if (!ft_strncmp(cmd->args[0], "exit", 5))
