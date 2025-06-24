@@ -65,7 +65,16 @@ char	*expand_word(char *s, t_shell *sh)
                     i++;
             }
             else if (s[i] == '$' && in_s == 0)
-                    handle_dollar_expand(&res, s, &i, sh);
+            {
+                    if (s[i + 1] == '?' || ft_isalpha(s[i + 1])
+                            || s[i + 1] == '_')
+                            handle_dollar_expand(&res, s, &i, sh);
+                    else
+                    {
+                            res = append_char(res, '$');
+                            i++;
+                    }
+            }
             else
             {
                     res = append_char(res, s[i]);

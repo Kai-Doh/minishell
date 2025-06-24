@@ -56,6 +56,7 @@ static int	handle_input(char *rl, t_shell *sh)
 	add_history(rl);
     tokens = NULL;
     int err = 0;
+    rl = strip_comments(rl);
     tokens = lexer(rl, &err);
     if (!tokens)
     {
