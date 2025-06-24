@@ -51,6 +51,7 @@
 /* ************************************************************************** */
 
 extern char	**g_env;
+extern int	g_last_exit_status;
 
 typedef enum e_type
 {

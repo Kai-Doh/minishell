@@ -36,8 +36,8 @@ static t_type	get_type(char *s)
 static char     *extract_token(char *s, int *i)
 {
         int             start;
-        char    quote;
-        char    *raw;
+        int             in_s;
+        int             in_d;
 
         while (is_space(s[*i]))
                 (*i)++;
@@ -52,28 +52,27 @@ static char     *extract_token(char *s, int *i)
         }
         else
         {
-                while (s[*i] && !is_space(s[*i])
+                in_s = 0;
+                in_d = 0;
+                while (s[*i] && (!is_space(s[*i]) || in_s || in_d)
                         && s[*i] != '<' && s[*i] != '>' && s[*i] != '|')
                 {
-                        if (s[*i] == '\'' || s[*i] == '"')
+                        if (s[*i] == '\\')
                         {
-                                quote = s[*i];
-                                (*i)++;
-                                while (s[*i] && s[*i] != quote)
+                                if (s[*i + 1])
+                                        (*i) += 2;
+                                else
                                         (*i)++;
-                                if (s[*i] == quote)
-                                        (*i)++;
+                                continue ;
                         }
-                        else
-                                (*i)++;
+                        if (s[*i] == '\'' && !in_d)
+                                in_s = !in_s;
+                        else if (s[*i] == '"' && !in_s)
+                                in_d = !in_d;
+                        (*i)++;
                 }
         }
-        raw = ft_substr(s, start, *i - start);
-        if (!raw)
-                return (NULL);
-        s = remove_quotes(raw);
-        free(raw);
-        return (s);
+        return (ft_substr(s, start, *i - start));
 }
 t_token	*lexer(char *s)
 {
