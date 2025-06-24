@@ -57,7 +57,6 @@ typedef struct s_shell
 }	t_shell;
 
 extern volatile sig_atomic_t	g_signal;
-extern int						g_lexer_error;
 
 typedef enum e_type
 {
@@ -101,11 +100,11 @@ void	start_shell_loop(t_shell *sh);
 /*                                    Lexer                                   */
 /* ************************************************************************** */
 
-t_token	*lexer(char *s);
-char	*extract_token(char *s, int *i);
+t_token *lexer(char *s, int *error);
+char *extract_token(char *s, int *i, int *error);
 int		is_space(char c);
 int		is_special(char c);
-void	quote_error(int in_s);
+void    quote_error(int in_s, int *error);
 t_type	get_type(char *s);
 void	free_tokens(t_token *tok);
 
