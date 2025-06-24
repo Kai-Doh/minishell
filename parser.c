@@ -100,38 +100,6 @@ static char     *expand_word(char *s, t_shell *sh)
         return (res);
 }
 
-static int	count_args(t_token *tok)
-{
-	int	count;
-
-	count = 0;
-	while (tok && tok->type == WORD)
-	{
-		count++;
-		tok = tok->next;
-	}
-	return (count);
-}
-
-static char **fill_args(t_token **tok, t_shell *sh)
-{
-	char	**args;
-	int		n;
-	int		i;
-
-	n = count_args(*tok);
-	args = malloc(sizeof(char *) * (n + 1));
-	if (!args)
-		return (NULL);
-	i = 0;
-	while (i < n)
-	{
-                args[i++] = expand_word((*tok)->content, sh);
-                *tok = (*tok)->next;
-	}
-	args[i] = NULL;
-	return (args);
-}
 
 static t_redir  *add_redir(t_token **tok, t_shell *sh)
 {
@@ -152,32 +120,38 @@ static t_redir  *add_redir(t_token **tok, t_shell *sh)
 
 static t_cmd    *add_command(t_token **tok, t_shell *sh)
 {
-	t_cmd	*cmd;
-	t_redir	*r;
-	t_redir	*last;
+        t_cmd   *cmd;
+        t_redir *r;
+        t_redir *last;
 
-	cmd = malloc(sizeof(t_cmd));
-	cmd->args = fill_args(tok, sh);
-	cmd->redir = NULL;
-	cmd->next = NULL;
-	last = NULL;
-	while (*tok && (*tok)->type != PIPE)
-	{
-		if ((*tok)->type >= REDIR_IN && (*tok)->type <= APPEND)
-		{
-			r = add_redir(tok, sh);
-			if (!cmd->redir)
-				cmd->redir = r;
-			else
-				last->next = r;
-			last = r;
-		}
-		else
-			*tok = (*tok)->next;
-	}
-	if (*tok && (*tok)->type == PIPE)
-		*tok = (*tok)->next;
-	return (cmd);
+        cmd = malloc(sizeof(t_cmd));
+        cmd->args = NULL;
+        cmd->redir = NULL;
+        cmd->next = NULL;
+        last = NULL;
+        while (*tok && (*tok)->type != PIPE)
+        {
+                if ((*tok)->type == WORD)
+                {
+                        char *arg = expand_word((*tok)->content, sh);
+                        cmd->args = ft_args_add(cmd->args, arg);
+                        *tok = (*tok)->next;
+                }
+                else if ((*tok)->type >= REDIR_IN && (*tok)->type <= APPEND)
+                {
+                        r = add_redir(tok, sh);
+                        if (!cmd->redir)
+                                cmd->redir = r;
+                        else
+                                last->next = r;
+                        last = r;
+                }
+                else
+                        *tok = (*tok)->next;
+        }
+        if (*tok && (*tok)->type == PIPE)
+                *tok = (*tok)->next;
+        return (cmd);
 }
 
 t_cmd   *parse(t_token *tok, t_shell *sh)

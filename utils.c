@@ -86,6 +86,24 @@ char    *remove_quotes(char *s)
                         res[j++] = s[i];
                 i++;
         }
-        res[j] = '\0';
-        return (res);
+       res[j] = '\0';
+       return (res);
+}
+
+char    **ft_args_add(char **arr, char *new_arg)
+{
+    int count = 0;
+    char **new;
+
+    while (arr && arr[count])
+        count++;
+    new = malloc(sizeof(char *) * (count + 2));
+    if (!new)
+        return NULL;
+    for (int i = 0; i < count; i++)
+        new[i] = arr[i];
+    new[count] = new_arg;
+    new[count + 1] = NULL;
+    free(arr);
+    return new;
 }
