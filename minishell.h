@@ -50,8 +50,13 @@
 /*                              Structure & Enum                              */
 /* ************************************************************************** */
 
-extern char	**g_env;
-extern int	g_last_exit_status;
+typedef struct s_shell
+{
+    char    **env;
+    int     last_exit_status;
+}   t_shell;
+
+extern volatile sig_atomic_t g_signal;
 
 typedef enum e_type
 {
@@ -90,7 +95,7 @@ typedef struct s_cmd
 /*                              Prompt + Boucle                               */
 /* ************************************************************************** */
 
-void	start_shell_loop(char **env);
+void    start_shell_loop(t_shell *sh);
 
 /* ************************************************************************** */
 /*                                    Lexer                                   */
@@ -103,14 +108,14 @@ void	free_tokens(t_token *tok);
 /*                                    Parser                                  */
 /* ************************************************************************** */
 
-t_cmd	*parse(t_token *tok);
+t_cmd   *parse(t_token *tok, t_shell *sh);
 void	free_cmds(t_cmd *cmd);
 
 /* ************************************************************************** */
 /*                                    Execution                               */
 /* ************************************************************************** */
 
-int		execute(t_cmd *cmd, char **env);
+int             execute(t_cmd *cmd, t_shell *sh);
 
 /* ************************************************************************** */
 /*                                 Redirections                               */
@@ -141,7 +146,7 @@ void	ft_free_split(char **arr);
 /*                                   UTILS                                    */
 /* ************************************************************************** */
 
-void	exit_msg(char *msg, int code);
+void    exit_msg(char *msg, int code, t_shell *sh);
 void	free_tokens(t_token *tok);
 void	free_cmds(t_cmd *cmd);
 char    *remove_quotes(char *s);
@@ -158,14 +163,14 @@ void	sigint_handler(int sig);
 /* ************************************************************************** */
 
 int		is_builtin(char *cmd);
-int		run_builtin(t_cmd *cmd, char **env);
+int             run_builtin(t_cmd *cmd, t_shell *sh);
 int		ft_pwd(void);
 int		ft_cd(char **args, char **env);
 int		ft_echo(char **args);
-int		ft_exit(char **args);
+int             ft_exit(char **args, t_shell *sh);
 int		ft_env(char **env);
-int		ft_export(char **args, char **env);
-int		ft_unset(char **args, char **env);
+int             ft_export(char **args, t_shell *sh);
+int             ft_unset(char **args, t_shell *sh);
 char	**dup_env(char **env);
 char	**ft_strs_add(char **env, char *new_entry);
 char	**ft_strs_remove(char **env, int index);

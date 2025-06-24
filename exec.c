@@ -31,7 +31,7 @@ static void	exec_cmd(t_cmd *cmd, char **env)
 	exit(126);
 }
 
-static void child_process(t_cmd *cmd, char **env, int in, int out)
+static void child_process(t_cmd *cmd, t_shell *sh, int in, int out)
 {
    if (in != STDIN_FILENO)
    {
@@ -45,27 +45,27 @@ static void child_process(t_cmd *cmd, char **env, int in, int out)
     }
    handle_redir(cmd->redir);
    if (is_builtin(cmd->args[0]))
-      exit(run_builtin(cmd, env));
-   exec_cmd(cmd, env);
+      exit(run_builtin(cmd, sh));
+   exec_cmd(cmd, sh->env);
 }
 
-static void	pipe_and_fork(t_cmd *cmd, char **env, int *in)
+static void	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in)
 {
 	int		fd[2];
 	pid_t	pid;
 	int		out;
 
 	if (cmd->next && pipe(fd) == -1)
-		exit_msg("Pipe error", 1);
+		exit_msg("Pipe error", 1, NULL);
 	out = cmd->next ? fd[1] : STDOUT_FILENO;
 	pid = fork();
 	if (pid < 0)
-		exit_msg("Fork failed", 1);
+		exit_msg("Fork failed", 1, NULL);
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		child_process(cmd, env, *in, out);
+		child_process(cmd, sh, *in, out);
 	}
 	if (*in != STDIN_FILENO)
 		close(*in);
@@ -76,7 +76,7 @@ static void	pipe_and_fork(t_cmd *cmd, char **env, int *in)
 	}
 }
 
-int	execute(t_cmd *cmd, char **env)
+int     execute(t_cmd *cmd, t_shell *sh)
 {
 	int	in;
 	int	save_in;
@@ -88,8 +88,8 @@ int	execute(t_cmd *cmd, char **env)
 		save_in = dup(STDIN_FILENO);
 		save_out = dup(STDOUT_FILENO);
 		handle_redir(cmd->redir);
-                status = run_builtin(cmd, env);
-                g_last_exit_status = status;
+                status = run_builtin(cmd, sh);
+                sh->last_exit_status = status;
                 dup2(save_in, STDIN_FILENO);
                 dup2(save_out, STDOUT_FILENO);
                 close(save_in);
@@ -100,16 +100,16 @@ int	execute(t_cmd *cmd, char **env)
 	in = STDIN_FILENO;
 	while (cmd)
 	{
-		pipe_and_fork(cmd, env, &in);
+		pipe_and_fork(cmd, sh, &in);
 		cmd = cmd->next;
 	}
         int     last = 0;
         while (wait(&status) > 0)
                 last = status;
         if (WIFEXITED(last))
-                g_last_exit_status = WEXITSTATUS(last);
+                sh->last_exit_status = WEXITSTATUS(last);
         else
-                g_last_exit_status = 1;
-        return (g_last_exit_status);
+                sh->last_exit_status = 1;
+        return (sh->last_exit_status);
 }
 
