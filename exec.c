@@ -79,9 +79,22 @@ static void	pipe_and_fork(t_cmd *cmd, char **env, int *in)
 int	execute(t_cmd *cmd, char **env)
 {
 	int	in;
+	int	save_in;
+	int	save_out;
+	int	status;
 
 	if (cmd && !cmd->next && is_builtin(cmd->args[0]))
-		return (run_builtin(cmd, env));
+	{
+		save_in = dup(STDIN_FILENO);
+		save_out = dup(STDOUT_FILENO);
+		handle_redir(cmd->redir);
+		status = run_builtin(cmd, env);
+		dup2(save_in, STDIN_FILENO);
+		dup2(save_out, STDOUT_FILENO);
+		close(save_in);
+		close(save_out);
+		return (status);
+	}
 
 	in = STDIN_FILENO;
 	while (cmd)
