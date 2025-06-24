@@ -166,7 +166,7 @@ void	sigint_handler(int sig);
 int		is_builtin(char *cmd);
 int             run_builtin(t_cmd *cmd, t_shell *sh);
 int		ft_pwd(void);
-int		ft_cd(char **args, char **env);
+int		ft_cd(char **args, t_shell *sh);
 int		ft_echo(char **args);
 int             ft_exit(char **args, t_shell *sh);
 int		ft_env(char **env);
