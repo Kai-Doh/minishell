@@ -18,6 +18,8 @@ SRCS =	minishell.c\
 		utils.c\
 		prompt.c\
 		echo.c\
+		parse.c\
+		exec.c\
 
 # Object Files (automatiquement générés à partir de SRCS)
 OBJS = $(SRCS:.c=.o)
