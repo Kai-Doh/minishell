@@ -12,26 +12,11 @@
 
 #include "minishell.h"
 
-static int      find_env_index(char **env, const char *key)
-{
-    int i;
-
-    i = 0;
-    while (env && env[i])
-    {
-        if (!ft_strncmp(env[i], key, ft_strlen(key))
-            && env[i][ft_strlen(key)] == '=')
-            return (i);
-        i++;
-    }
-    return (-1);
-}
-
 static void     update_env_var(t_shell *sh, const char *key, const char *val)
 {
+    int     i;
     char    *tmp;
     char    *entry;
-    int             idx;
 
     tmp = ft_strjoin(key, "=");
     if (!tmp)
@@ -40,15 +25,21 @@ static void     update_env_var(t_shell *sh, const char *key, const char *val)
     free(tmp);
     if (!entry)
         return ;
-    idx = find_env_index(sh->env, key);
-    if (idx >= 0)
+    i = 0;
+    while (sh->env && sh->env[i])
     {
-        free(sh->env[idx]);
-        sh->env[idx] = ft_strdup(entry);
-        free(entry);
+        if (!ft_strncmp(sh->env[i], key, ft_strlen(key))
+            && sh->env[i][ft_strlen(key)] == '=')
+        {
+            free(sh->env[i]);
+            sh->env[i] = ft_strdup(entry);
+            free(entry);
+            return ;
+        }
+        i++;
     }
-    else
-        sh->env = ft_strs_add(sh->env, entry);
+    sh->env = ft_strs_add(sh->env, entry);
+    free(entry);
 }
 
 int     ft_cd(char **args, t_shell *sh)

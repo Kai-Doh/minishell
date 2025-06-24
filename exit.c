@@ -14,42 +14,42 @@
 
 
 
-static int    is_numeric(char *str)
+static int	is_numeric(char *str)
 {
-    int    i;
+	int	i;
 
-    i = 0;
-    if (!str)
-        return (0);
-    if (str[i] == '-' || str[i] == '+')
-        i++;
-    while (str[i])
-    {
-        if (!ft_isdigit(str[i]))
-            return (0);
-        i++;
-    }
-    return (1);
+	i = 0;
+	if (!str)
+		return (0);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int     ft_exit(char **args, t_shell *sh)
 {
-    int    code;
+	int	code;
 
-    ft_putendl_fd("exit", STDERR_FILENO);
-    if (args[1] && !is_numeric(args[1]))
-    {
-        ft_putstr_fd("minishell: exit: ", 2);
-        ft_putstr_fd(args[1], 2);
-        ft_putendl_fd(": numeric argument required", 2);
-        ft_free_split(sh->env);
+	ft_putendl_fd("exit", STDERR_FILENO);
+	if (args[1] && !is_numeric(args[1]))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		ft_free_split(sh->env);
                 exit(255);
-    }
-    if (args[1] && args[2])
-    {
-        ft_putendl_fd("minishell: exit: too many arguments", 2);
-        return (1);
-    }
+	}
+	if (args[1] && args[2])
+	{
+		ft_putendl_fd("minishell: exit: too many arguments", 2);
+		return (1);
+	}
   code = args[1] ? ft_atoi(args[1]) : sh->last_exit_status;
   ft_free_split(sh->env);
         exit(code);

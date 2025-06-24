@@ -14,17 +14,17 @@
 
 volatile sig_atomic_t g_signal = 0;
 
-void    sigint_handler(int sig)
+void	sigint_handler(int sig)
 {
-    g_signal = sig;
-    write(1, "\n", 1);
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
+	g_signal = sig;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
-void    setup_signals(void)
+void	setup_signals(void)
 {
-    signal(SIGINT, sigint_handler);
-    signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
