@@ -11,11 +11,14 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+extern char **g_env;
 
 void	exit_msg(char *msg, int code)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putendl_fd(msg, 2);
+        if (g_env)
+                ft_free_split(g_env);
 	exit(code);
 }
 

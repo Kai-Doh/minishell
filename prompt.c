@@ -13,12 +13,15 @@
 #include "minishell.h"
 
 static char	*prompt(void);
-static int	handle_input(char *rl, char **env);
+static int	handle_input(char *rl);
 
 void	start_shell_loop(char **env)
 {
 	char	*rl;
 	char	*prompt_str;
+	g_env = dup_env(env);
+	if (!g_env)
+		exit_msg("Failed to copy environment", 1);
 
 	while (1)
 	{
@@ -29,16 +32,17 @@ void	start_shell_loop(char **env)
 		free(prompt_str);
 		if (!rl)
 			break ;
-		if (handle_input(rl, env))
+		if (handle_input(rl))
 		{
 			free(rl);
 			break ;
 		}
 		free(rl);
 	}
+	ft_free_split(g_env);
 }
 
-static int	handle_input(char *rl, char **env)
+static int	handle_input(char *rl)
 {
 	t_token	*tokens;
 	t_cmd	*cmds;
@@ -52,7 +56,7 @@ static int	handle_input(char *rl, char **env)
 	cmds = parse(tokens);
 	if (!cmds)
 		return (0);
-	execute(cmds, env);
+	execute(cmds, g_env);
 	free_tokens(tokens);
 	free_cmds(cmds);
 	return (0);
