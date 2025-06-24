@@ -6,13 +6,63 @@
 /*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:10:08 by ktiomico          #+#    #+#             */
-/*   Updated: 2025/04/13 00:10:09 by ktiomico         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:25:01 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*prompt(void)
+static char	*prompt(void);
+static int	handle_input(char *rl, t_shell *sh);
+
+void	start_shell_loop(t_shell *sh)
+{
+	char	*rl;
+	char	*prompt_str;
+
+	while (1)
+	{
+		prompt_str = prompt();
+		if (!prompt_str)
+			continue ;
+		rl = readline(prompt_str);
+		free(prompt_str);
+		if (!rl)
+			break ;
+		if (handle_input(rl, sh))
+		{
+			free(rl);
+			break ;
+		}
+		free(rl);
+	}
+}
+
+static int	handle_input(char *rl, t_shell *sh)
+{
+	t_token	*tokens;
+	t_cmd	*cmds;
+
+	if (!rl || rl[0] == '\0')
+		return (0);
+	add_history(rl);
+	tokens = lexer(rl);
+	if (!tokens)
+	{
+		if (g_lexer_error)
+			sh->last_exit_status = 2;
+		return (0);
+	}
+	cmds = parse(tokens, sh);
+	if (!cmds)
+		return (0);
+	execute(cmds, sh);
+	free_tokens(tokens);
+	free_cmds(cmds);
+	return (0);
+}
+
+static char	*prompt(void)
 {
 	char	*username;
 	char	*start;

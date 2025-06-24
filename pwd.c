@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: github <github@kaidoh.ch>                  +#+  +:+       +#+        */
+/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/24 22:24:51 by github            #+#    #+#             */
-/*   Updated: 2025/06/24 22:24:51 by github           ###   ########.fr       */
+/*   Created: 2025/04/29 15:36:32 by ktiomico          #+#    #+#             */
+/*   Updated: 2025/04/29 15:36:44 by ktiomico         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **env)
+int	ft_pwd(void)
 {
-	t_shell	sh;
+	char	cwd[4096];
 
-	(void)argv;
-	if (argc != 1)
-		exit_msg(ARGS, ERROR, NULL);
-	sh.env = dup_env(env);
-	sh.last_exit_status = 0;
-	setup_signals();
-	start_shell_loop(&sh);
-	ft_free_split(sh.env);
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
+		perror("pwd");
+		return (1);
+	}
+	ft_putendl_fd(cwd, STDOUT_FILENO);
 	return (0);
 }
