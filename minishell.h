@@ -175,6 +175,7 @@ int             ft_unset(char **args, t_shell *sh);
 char	**dup_env(char **env);
 char	**ft_strs_add(char **env, char *new_entry);
 char	**ft_strs_remove(char **env, int index);
+char    **ft_args_add(char **arr, char *new_arg);
 
 
 
