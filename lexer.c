@@ -54,13 +54,15 @@ static char     *extract_token(char *s, int *i)
         {
                 in_s = 0;
                 in_d = 0;
-                while (s[*i] && (!is_space(s[*i]) || in_s || in_d)
-                        && s[*i] != '<' && s[*i] != '>' && s[*i] != '|')
+                while (s[*i] && (!is_space(s[*i]) || in_s || in_d))
                 {
                         if (s[*i] == '\'' && !in_d)
                                 in_s = !in_s;
                         else if (s[*i] == '"' && !in_s)
                                 in_d = !in_d;
+                        else if (!in_s && !in_d
+                                 && (s[*i] == '<' || s[*i] == '>' || s[*i] == '|'))
+                                break ;
                         (*i)++;
                 }
         }

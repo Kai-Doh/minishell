@@ -50,7 +50,7 @@ int     ft_exit(char **args, t_shell *sh)
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
 		return (1);
 	}
-	code = args[1] ? ft_atoi(args[1]) : 0;
-	ft_free_split(sh->env);
+  code = args[1] ? ft_atoi(args[1]) : sh->last_exit_status;
+  ft_free_split(sh->env);
         exit(code);
 }
