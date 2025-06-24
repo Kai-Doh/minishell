@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char     *get_env_value(char *name)
+static char     *get_env_value(char *name, t_shell *sh)
 {
         int             i;
         size_t  len;
@@ -21,10 +21,10 @@ static char     *get_env_value(char *name)
                 return ("");
         len = ft_strlen(name);
         i = 0;
-        while (g_env && g_env[i])
+        while (sh->env && sh->env[i])
         {
-                if (!ft_strncmp(g_env[i], name, len) && g_env[i][len] == '=')
-                        return (g_env[i] + len + 1);
+                if (!ft_strncmp(sh->env[i], name, len) && sh->env[i][len] == '=')
+                        return (sh->env[i] + len + 1);
                 i++;
         }
         return ("");
@@ -48,7 +48,7 @@ static char     *append_char(char *base, char c)
         return (append_str(base, str));
 }
 
-static char     *expand_word(char *s)
+static char     *expand_word(char *s, t_shell *sh)
 {
         char    *res;
         size_t  i;
@@ -73,22 +73,11 @@ static char     *expand_word(char *s)
                         i++;
                         continue ;
                 }
-                if (s[i] == '\\' && !in_s)
-                {
-                        if (s[i + 1])
-                        {
-                                res = append_char(res, s[i + 1]);
-                                i += 2;
-                                continue ;
-                        }
-                        i++;
-                        continue ;
-                }
                 if (s[i] == '$' && !in_s)
                 {
                         if (s[i + 1] == '?')
                         {
-                                char *tmp = ft_itoa(g_last_exit_status);
+                                char *tmp = ft_itoa(sh->last_exit_status);
                                 res = append_str(res, tmp);
                                 free(tmp);
                                 i += 2;
@@ -100,7 +89,7 @@ static char     *expand_word(char *s)
                                 while (ft_isalnum(s[i]) || s[i] == '_')
                                         i++;
                                 char *name = ft_substr(s, start, i - start);
-                                res = append_str(res, get_env_value(name));
+                                res = append_str(res, get_env_value(name, sh));
                                 free(name);
                                 continue ;
                         }
@@ -124,7 +113,7 @@ static int	count_args(t_token *tok)
 	return (count);
 }
 
-static char	**fill_args(t_token **tok)
+static char **fill_args(t_token **tok, t_shell *sh)
 {
 	char	**args;
 	int		n;
@@ -137,14 +126,14 @@ static char	**fill_args(t_token **tok)
 	i = 0;
 	while (i < n)
 	{
-                args[i++] = expand_word((*tok)->content);
+                args[i++] = expand_word((*tok)->content, sh);
                 *tok = (*tok)->next;
 	}
 	args[i] = NULL;
 	return (args);
 }
 
-static t_redir	*add_redir(t_token **tok)
+static t_redir  *add_redir(t_token **tok, t_shell *sh)
 {
 	t_redir	*r;
 
@@ -155,20 +144,20 @@ static t_redir	*add_redir(t_token **tok)
 	*tok = (*tok)->next;
 	if (!*tok)
 		return (NULL);
-        r->file = expand_word((*tok)->content);
+        r->file = expand_word((*tok)->content, sh);
 	r->next = NULL;
 	*tok = (*tok)->next;
 	return (r);
 }
 
-static t_cmd	*add_command(t_token **tok)
+static t_cmd    *add_command(t_token **tok, t_shell *sh)
 {
 	t_cmd	*cmd;
 	t_redir	*r;
 	t_redir	*last;
 
 	cmd = malloc(sizeof(t_cmd));
-	cmd->args = fill_args(tok);
+	cmd->args = fill_args(tok, sh);
 	cmd->redir = NULL;
 	cmd->next = NULL;
 	last = NULL;
@@ -176,7 +165,7 @@ static t_cmd	*add_command(t_token **tok)
 	{
 		if ((*tok)->type >= REDIR_IN && (*tok)->type <= APPEND)
 		{
-			r = add_redir(tok);
+			r = add_redir(tok, sh);
 			if (!cmd->redir)
 				cmd->redir = r;
 			else
@@ -191,7 +180,7 @@ static t_cmd	*add_command(t_token **tok)
 	return (cmd);
 }
 
-t_cmd	*parse(t_token *tok)
+t_cmd   *parse(t_token *tok, t_shell *sh)
 {
 	t_cmd	*first;
 	t_cmd	*last;
@@ -201,7 +190,7 @@ t_cmd	*parse(t_token *tok)
 	last = NULL;
 	while (tok)
 	{
-		new = add_command(&tok);
+		new = add_command(&tok, sh);
 		if (!first)
 			first = new;
 		else

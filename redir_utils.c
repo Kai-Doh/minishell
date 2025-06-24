@@ -34,7 +34,7 @@ void	do_redir_in(t_redir *r)
 
 	fd = open(r->file, O_RDONLY);
 	if (fd < 0)
-		exit_msg("No such file or permission denied", 1);
+		exit_msg("No such file or permission denied", 1, NULL);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 }
@@ -45,7 +45,7 @@ void	do_redir_out(t_redir *r)
 
 	fd = open(r->file, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
-		exit_msg("Cannot open output file", 1);
+		exit_msg("Cannot open output file", 1, NULL);
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 }
@@ -56,7 +56,7 @@ void	do_redir_append(t_redir *r)
 
 	fd = open(r->file, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (fd < 0)
-		exit_msg("Cannot append to file", 1);
+		exit_msg("Cannot append to file", 1, NULL);
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
 }

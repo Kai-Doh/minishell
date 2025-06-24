@@ -36,13 +36,12 @@ char	**dup_env(char **env)
 int	ft_env(char **env)
 {
 	int	i;
-
-	(void)env;
+	 
 	i = 0;
-	while (g_env && g_env[i])
+	while (env && env[i])
 	{
-		if (ft_strchr(g_env[i], '='))
-			ft_putendl_fd(g_env[i], STDOUT_FILENO);
+		if (ft_strchr(env[i], '='))
+			ft_putendl_fd(env[i], STDOUT_FILENO);
 		i++;
 	}
 	return (0);

@@ -19,5 +19,9 @@ class MinishellTests(unittest.TestCase):
         output = self.run_shell('echo "$HOME" | cat\nexit\n')
         self.assertIn(os.environ.get("HOME", ""), output)
 
+    def test_backslash_literal(self):
+        output = self.run_shell('echo \\hello\nexit\n')
+        self.assertIn('\\hello', output)
+
 if __name__ == '__main__':
     unittest.main()
