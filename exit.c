@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+extern char **g_env;
+
 static int	is_numeric(char *str)
 {
 	int	i;
@@ -40,7 +42,8 @@ int	ft_exit(char **args)
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
-		exit(255);
+		ft_free_split(g_env);
+                exit(255);
 	}
 	if (args[1] && args[2])
 	{
@@ -48,5 +51,6 @@ int	ft_exit(char **args)
 		return (1);
 	}
 	code = args[1] ? ft_atoi(args[1]) : 0;
-	exit(code);
+	ft_free_split(g_env);
+        exit(code);
 }
