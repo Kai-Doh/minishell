@@ -88,12 +88,13 @@ int	execute(t_cmd *cmd, char **env)
 		save_in = dup(STDIN_FILENO);
 		save_out = dup(STDOUT_FILENO);
 		handle_redir(cmd->redir);
-		status = run_builtin(cmd, env);
-		dup2(save_in, STDIN_FILENO);
-		dup2(save_out, STDOUT_FILENO);
-		close(save_in);
-		close(save_out);
-		return (status);
+                status = run_builtin(cmd, env);
+                g_last_exit_status = status;
+                dup2(save_in, STDIN_FILENO);
+                dup2(save_out, STDOUT_FILENO);
+                close(save_in);
+                close(save_out);
+                return (status);
 	}
 
 	in = STDIN_FILENO;
@@ -102,8 +103,13 @@ int	execute(t_cmd *cmd, char **env)
 		pipe_and_fork(cmd, env, &in);
 		cmd = cmd->next;
 	}
-	while (wait(NULL) > 0)
-		;
-	return (0);
+        int     last = 0;
+        while (wait(&status) > 0)
+                last = status;
+        if (WIFEXITED(last))
+                g_last_exit_status = WEXITSTATUS(last);
+        else
+                g_last_exit_status = 1;
+        return (g_last_exit_status);
 }
 
