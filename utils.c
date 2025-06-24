@@ -54,7 +54,36 @@ void	free_cmds(t_cmd *cmd)
 			free(r);
 			r = r_next;
 		}
-		free(cmd);
-		cmd = tmp;
-	}
+                free(cmd);
+                cmd = tmp;
+        }
+}
+
+char    *remove_quotes(char *s)
+{
+        char    *res;
+        int             i;
+        int             j;
+
+        i = 0;
+        j = 0;
+        while (s && s[i])
+        {
+                if (s[i] != '\'' && s[i] != '"')
+                        j++;
+                i++;
+        }
+        res = malloc(j + 1);
+        if (!res)
+                return (NULL);
+        i = 0;
+        j = 0;
+        while (s && s[i])
+        {
+                if (s[i] != '\'' && s[i] != '"')
+                        res[j++] = s[i];
+                i++;
+        }
+        res[j] = '\0';
+        return (res);
 }
