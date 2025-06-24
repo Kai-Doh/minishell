@@ -57,6 +57,7 @@ typedef struct s_shell
 }   t_shell;
 
 extern volatile sig_atomic_t g_signal;
+extern int g_lexer_error;
 
 typedef enum e_type
 {

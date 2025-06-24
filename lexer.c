@@ -33,6 +33,8 @@ static t_type	get_type(char *s)
 }
 
 
+int g_lexer_error = 0;
+
 static char     *extract_token(char *s, int *i)
 {
         int             start;
@@ -50,23 +52,31 @@ static char     *extract_token(char *s, int *i)
                 if (s[*i] == s[start])
                         (*i)++;
         }
-        else
-        {
-                in_s = 0;
-                in_d = 0;
-                while (s[*i] && (!is_space(s[*i]) || in_s || in_d))
-                {
-                        if (s[*i] == '\'' && !in_d)
-                                in_s = !in_s;
-                        else if (s[*i] == '"' && !in_s)
-                                in_d = !in_d;
-                        else if (!in_s && !in_d
-                                 && (s[*i] == '<' || s[*i] == '>' || s[*i] == '|'))
-                                break ;
-                        (*i)++;
-                }
-        }
-        return (ft_substr(s, start, *i - start));
+       else
+       {
+               in_s = 0;
+               in_d = 0;
+               while (s[*i] && (!is_space(s[*i]) || in_s || in_d))
+               {
+                       if (s[*i] == '\'' && !in_d)
+                               in_s = !in_s;
+                       else if (s[*i] == '"' && !in_s)
+                               in_d = !in_d;
+                       else if (!in_s && !in_d
+                                && (s[*i] == '<' || s[*i] == '>' || s[*i] == '|'))
+                               break ;
+                       (*i)++;
+               }
+               if (in_s || in_d)
+               {
+                       ft_putstr_fd("minishell: unexpected EOF while looking for matching '", 2);
+                       ft_putchar_fd(in_s ? '\'' : '"', 2);
+                       ft_putendl_fd("'", 2);
+                       g_lexer_error = 1;
+                       return (NULL);
+               }
+       }
+       return (ft_substr(s, start, *i - start));
 }
 t_token	*lexer(char *s)
 {
@@ -76,10 +86,11 @@ t_token	*lexer(char *s)
 	char	*val;
 	int		i;
 
-	i = 0;
-	head = NULL;
-	while ((val = extract_token(s, &i)))
-	{
+       i = 0;
+       g_lexer_error = 0;
+       head = NULL;
+       while ((val = extract_token(s, &i)))
+       {
 		new = malloc(sizeof(t_token));
 		new->content = val;
 		new->type = get_type(val);
@@ -89,6 +100,11 @@ t_token	*lexer(char *s)
 		else
 			cur->next = new;
 		cur = new;
-	}
-	return (head);
+       }
+       if (g_lexer_error)
+       {
+               free_tokens(head);
+               return (NULL);
+       }
+       return (head);
 }
