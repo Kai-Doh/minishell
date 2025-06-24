@@ -1,34 +1,46 @@
 #include "minishell.h"
 
-static char *strip_quotes(char *str)
+/*
+ * Print the given argument line like the real bash echo without options.
+ * Quotes are removed and spaces preserved. This is a very small parser that
+ * understands single and double quotes and treats everything else literally.
+ */
+void    builtin_echo(char *arg_line)
 {
-    size_t len;
+    bool    in_single;
+    bool    in_double;
 
-    if (!str)
-        return (NULL);
-    len = ft_strlen(str);
-    if (len >= 2 && ((str[0] == '\'' && str[len - 1] == '\'') ||
-        (str[0] == '"' && str[len - 1] == '"')))
-        return (ft_substr(str, 1, len - 2));
-    return (ft_strdup(str));
-}
-
-void    builtin_echo(char *arg)
-{
-    char *output;
-
-    if (!arg)
+    if (!arg_line)
     {
         printf("\n");
         return ;
     }
-    output = strip_quotes(arg);
-    if (output)
+    in_single = false;
+    in_double = false;
+    while (*arg_line)
     {
-        printf("%s\n", output);
-        free(output);
+        if (*arg_line == '\'' && !in_double)
+        {
+            in_single = !in_single;
+            arg_line++;
+            continue ;
+        }
+        if (*arg_line == '"' && !in_single)
+        {
+            in_double = !in_double;
+            arg_line++;
+            continue ;
+        }
+        if (*arg_line == ' ' && !in_single && !in_double)
+        {
+            putchar(' ');
+            while (*arg_line == ' ')
+                arg_line++;
+            continue ;
+        }
+        putchar(*arg_line);
+        arg_line++;
     }
-    else
-        printf("%s\n", arg);
+    putchar('\n');
 }
 
