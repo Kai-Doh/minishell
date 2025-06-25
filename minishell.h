@@ -160,7 +160,6 @@ void	ft_free_split(char **arr);
 void	exit_msg(char *msg, int code, t_shell *sh);
 void	free_tokens(t_token *tok);
 void	free_cmds(t_cmd *cmd);
-char	*remove_quotes(char *s);
 
 /* ************************************************************************** */
 /*                                   SIGNALS                                  */
