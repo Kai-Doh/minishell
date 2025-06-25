@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int     ft_unset(char **args, t_shell *sh)
+int	ft_unset(char **args, t_shell *sh)
 {
 	int		i;
 	int		j;

@@ -28,7 +28,7 @@ static int	is_valid_key(char *str)
 	return (1);
 }
 
-static void     update_or_add(char *arg, t_shell *sh)
+static void	update_or_add(char *arg, t_shell *sh)
 {
 	char	*key;
 	char	*equal;
@@ -57,7 +57,7 @@ static void     update_or_add(char *arg, t_shell *sh)
 	sh->env = ft_strs_add(sh->env, arg);
 }
 
-int     ft_export(char **args, t_shell *sh)
+int	ft_export(char **args, t_shell *sh)
 {
 	int	i;
 

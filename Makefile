@@ -14,7 +14,7 @@ CFLAGS  = -Wall -Wextra -Werror -g -I.
 LDLIBS  = -lreadline -lhistory -lncurses   # or -ltermcap
 
 # Sources / objects
-SRCS = minishell.c prompt.c exec.c heredoc.c lexer.c parser.c path.c redir_utils.c utils.c signals.c dispatcher.c echo.c pwd.c cd.c exit.c env_utils.c export.c unset.c
+SRCS = minishell.c prompt.c exec.c heredoc.c lexer.c parser.c path.c redir_utils.c utils.c signals.c dispatcher.c echo.c pwd.c cd.c exit.c env_utils.c export.c unset.c exec_utils.c lexer_token.c lexer_utils.c parser_utils.c parser_cmd.c free_cmds.c remove_quotes.c
 OBJS = $(SRCS:.c=.o)
 
 # libft

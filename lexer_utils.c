@@ -1,28 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: github <github@kaidoh.ch>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/24 22:24:51 by github            #+#    #+#             */
-/*   Updated: 2025/06/24 22:24:51 by github           ###   ########.fr       */
+/*   Created: 2025/06/24 23:23:45 by github            #+#    #+#             */
+/*   Updated: 2025/06/24 23:23:49 by github           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **env)
+int	is_space(char c)
 {
-	t_shell	sh;
-
-	(void)argv;
-	if (argc != 1)
-		exit_msg(ARGS, ERROR, NULL);
-	sh.env = dup_env(env);
-	sh.last_exit_status = 0;
-	setup_signals();
-	start_shell_loop(&sh);
-	ft_free_split(sh.env);
+	if (c == ' ')
+		return (1);
+	if (c >= 9 && c <= 13)
+		return (1);
 	return (0);
+}
+
+int	is_special(char c)
+{
+	if (c == '<' || c == '>' || c == '|')
+		return (1);
+	return (0);
+}
+
+void	quote_error(int in_s, int *error)
+{
+	ft_putstr_fd("minishell: unexpected EOF while looking for matching '", 2);
+	if (in_s)
+		ft_putchar_fd('\'', 2);
+	else
+		ft_putchar_fd('"', 2);
+	ft_putendl_fd("'", 2);
+	if (error)
+		*error = 1;
 }

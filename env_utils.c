@@ -36,7 +36,7 @@ char	**dup_env(char **env)
 int	ft_env(char **env)
 {
 	int	i;
-	 
+
 	i = 0;
 	while (env && env[i])
 	{
@@ -94,4 +94,3 @@ char	**ft_strs_remove(char **env, int index)
 	ft_free_split(env);
 	return (new);
 }
-

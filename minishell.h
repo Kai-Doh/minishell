@@ -52,12 +52,11 @@
 
 typedef struct s_shell
 {
-    char    **env;
-    int     last_exit_status;
-}   t_shell;
+	char	**env;
+	int		last_exit_status;
+}	t_shell;
 
-extern volatile sig_atomic_t g_signal;
-extern int g_lexer_error;
+extern volatile sig_atomic_t	g_signal;
 
 typedef enum e_type
 {
@@ -91,32 +90,43 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }	t_cmd;
 
-
 /* ************************************************************************** */
 /*                              Prompt + Boucle                               */
 /* ************************************************************************** */
 
-void    start_shell_loop(t_shell *sh);
+void	start_shell_loop(t_shell *sh);
 
 /* ************************************************************************** */
 /*                                    Lexer                                   */
 /* ************************************************************************** */
 
-t_token	*lexer(char *line);
+t_token	*lexer(char *s, int *error);
+char	*extract_token(char *s, int *i, int *error);
+int		is_space(char c);
+int		is_special(char c);
+void	quote_error(int in_s, int *error);
+t_type	get_type(char *s);
 void	free_tokens(t_token *tok);
 
 /* ************************************************************************** */
 /*                                    Parser                                  */
 /* ************************************************************************** */
 
-t_cmd   *parse(t_token *tok, t_shell *sh);
+t_cmd	*parse(t_token *tok, t_shell *sh);
+t_cmd	*add_command(t_token **tok, t_shell *sh);
+t_redir	*add_redir(t_token **tok, t_shell *sh);
+char	*expand_word(char *s, t_shell *sh);
+char	*append_str(char *base, const char *add);
+char	*append_char(char *base, char c);
+char	*get_env_value(char *name, t_shell *sh);
 void	free_cmds(t_cmd *cmd);
 
 /* ************************************************************************** */
 /*                                    Execution                               */
 /* ************************************************************************** */
 
-int             execute(t_cmd *cmd, t_shell *sh);
+int		execute(t_cmd *cmd, t_shell *sh);
+void	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in);
 
 /* ************************************************************************** */
 /*                                 Redirections                               */
@@ -147,10 +157,10 @@ void	ft_free_split(char **arr);
 /*                                   UTILS                                    */
 /* ************************************************************************** */
 
-void    exit_msg(char *msg, int code, t_shell *sh);
+void	exit_msg(char *msg, int code, t_shell *sh);
 void	free_tokens(t_token *tok);
 void	free_cmds(t_cmd *cmd);
-char    *remove_quotes(char *s);
+char	*remove_quotes(char *s);
 
 /* ************************************************************************** */
 /*                                   SIGNALS                                  */
@@ -164,19 +174,18 @@ void	sigint_handler(int sig);
 /* ************************************************************************** */
 
 int		is_builtin(char *cmd);
-int             run_builtin(t_cmd *cmd, t_shell *sh);
+int		run_builtin(t_cmd *cmd, t_shell *sh);
 int		ft_pwd(void);
 int		ft_cd(char **args, t_shell *sh);
 int		ft_echo(char **args);
-int             ft_exit(char **args, t_shell *sh);
+int		ft_exit(char **args, t_shell *sh);
 int		ft_env(char **env);
-int             ft_export(char **args, t_shell *sh);
-int             ft_unset(char **args, t_shell *sh);
+int		ft_export(char **args, t_shell *sh);
+int		ft_unset(char **args, t_shell *sh);
 char	**dup_env(char **env);
 char	**ft_strs_add(char **env, char *new_entry);
 char	**ft_strs_remove(char **env, int index);
-char    **ft_args_add(char **arr, char *new_arg);
-
-
+char	**ft_args_add(char **arr, char *new_arg);
+char	*strip_comments(char *line);
 
 #endif

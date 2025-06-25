@@ -49,6 +49,8 @@ int	create_heredoc(char *delimiter)
 	pid_t	pid;
 	int		status;
 
+	if (!delimiter || *delimiter == '\0')
+		return (-1);
 	if (pipe(fd) == -1)
 		return (-1);
 	pid = fork();
@@ -63,6 +65,5 @@ int	create_heredoc(char *delimiter)
 		close(fd[0]);
 		return (-1);
 	}
-
 	return (fd[0]);
 }

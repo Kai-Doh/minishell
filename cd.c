@@ -12,69 +12,91 @@
 
 #include "minishell.h"
 
-static void     update_env_var(t_shell *sh, const char *key, const char *val)
+static void	update_existing_var(t_shell *sh, const char *key, char *entry)
 {
-    int     i;
-    char    *tmp;
-    char    *entry;
+	int		i;
+	size_t	key_len;
 
-    tmp = ft_strjoin(key, "=");
-    if (!tmp)
-        return ;
-    entry = ft_strjoin(tmp, val);
-    free(tmp);
-    if (!entry)
-        return ;
-    i = 0;
-    while (sh->env && sh->env[i])
-    {
-        if (!ft_strncmp(sh->env[i], key, ft_strlen(key))
-            && sh->env[i][ft_strlen(key)] == '=')
-        {
-            free(sh->env[i]);
-            sh->env[i] = ft_strdup(entry);
-            free(entry);
-            return ;
-        }
-        i++;
-    }
-    sh->env = ft_strs_add(sh->env, entry);
-    free(entry);
+	i = 0;
+	key_len = ft_strlen(key);
+	while (sh->env && sh->env[i])
+	{
+		if (!ft_strncmp(sh->env[i], key, key_len)
+			&& sh->env[i][key_len] == '=')
+		{
+			free(sh->env[i]);
+			sh->env[i] = ft_strdup(entry);
+			free(entry);
+			return ;
+		}
+		i++;
+	}
+	sh->env = ft_strs_add(sh->env, entry);
+	free(entry);
 }
 
-int     ft_cd(char **args, t_shell *sh)
+static void	update_env_var(t_shell *sh, const char *key, const char *val)
 {
-    char    *target;
-    char    cwd[4096];
-    char    old[4096];
+	char	*tmp;
+	char	*entry;
 
-    if (args[1] && args[2])
-    {
-        ft_putendl_fd("cd: too many arguments", 2);
-        return (1);
-    }
-    if (getcwd(old, sizeof(old)) == NULL)
-        old[0] = '\0';
-    if (!args[1])
-    {
-        target = getenv("HOME");
-        if (!target)
-        {
-            ft_putendl_fd("cd: HOME not set", 2);
-            return (1);
-        }
-    }
-    else
-        target = args[1];
-    if (chdir(target) != 0)
-    {
-        perror("cd");
-        return (1);
-    }
-    if (getcwd(cwd, sizeof(cwd)))
-    {
-        update_env_var(sh, "OLDPWD", old);
-        update_env_var(sh, "PWD", cwd);
-    }
-    return (0);
+	tmp = NULL;
+	entry = NULL;
+	tmp = ft_strjoin(key, "=");
+	if (!tmp)
+		return ;
+	entry = ft_strjoin(tmp, val);
+	free(tmp);
+	if (!entry)
+		return ;
+	update_existing_var(sh, key, entry);
+}
+
+static int	get_target_dir(char **args, char **target)
+{
+	char	*home;
+
+	*target = NULL;
+	if (!args[1])
+	{
+		home = getenv("HOME");
+		if (!home)
+		{
+			ft_putendl_fd("cd: HOME not set", 2);
+			return (1);
+		}
+		*target = home;
+	}
+	else
+		*target = args[1];
+	return (0);
+}
+
+int	ft_cd(char **args, t_shell *sh)
+{
+	char	*target;
+	char	cwd[4096];
+	char	old[4096];
+
+	target = NULL;
+	if (args[1] && args[2])
+	{
+		ft_putendl_fd("cd: too many arguments", 2);
+		return (1);
+	}
+	if (getcwd(old, sizeof(old)) == NULL)
+		old[0] = '\0';
+	if (get_target_dir(args, &target) != 0)
+		return (1);
+	if (chdir(target) != 0)
+	{
+		perror("cd");
+		return (1);
+	}
+	if (getcwd(cwd, sizeof(cwd)))
+	{
+		update_env_var(sh, "OLDPWD", old);
+		update_env_var(sh, "PWD", cwd);
+	}
+	return (0);
 }
