@@ -47,28 +47,34 @@ void	start_shell_loop(t_shell *sh)
 		;
 }
 
+static int	lexer_fail(int err, t_shell *sh)
+{
+	if (err)
+		sh->last_exit_status = 2;
+	return (0);
+}
+
 static int	handle_input(char *rl, t_shell *sh)
 {
 	t_token	*tokens;
 	t_cmd	*cmds;
 	int		err;
 
+	tokens = NULL;
+	err = 0;
 	if (!rl || rl[0] == '\0')
 		return (0);
 	add_history(rl);
-	tokens = NULL;
-	err = 0;
 	rl = strip_comments(rl);
 	tokens = lexer(rl, &err);
 	if (!tokens)
-	{
-		if (err)
-			sh->last_exit_status = 2;
-		return (0);
-	}
+		return (lexer_fail(err, sh));
 	cmds = parse(tokens, sh);
 	if (!cmds)
+	{
+		free_tokens(tokens);
 		return (0);
+	}
 	execute(cmds, sh);
 	free_tokens(tokens);
 	free_cmds(cmds);

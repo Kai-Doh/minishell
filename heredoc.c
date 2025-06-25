@@ -43,6 +43,16 @@ static void	heredoc_child(char *delimiter, int write_fd)
 	exit(0);
 }
 
+static pid_t	fork_heredoc(char *delimiter, int fd[2])
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == 0)
+		heredoc_child(delimiter, fd[1]);
+	return (pid);
+}
+
 int	create_heredoc(char *delimiter)
 {
 	int		fd[2];
@@ -53,10 +63,12 @@ int	create_heredoc(char *delimiter)
 		return (-1);
 	if (pipe(fd) == -1)
 		return (-1);
-	pid = fork();
-	if (pid == 0)
+	pid = fork_heredoc(delimiter, fd);
+	if (pid < 0)
 	{
-		heredoc_child(delimiter, fd[1]);
+		close(fd[0]);
+		close(fd[1]);
+		return (-1);
 	}
 	close(fd[1]);
 	waitpid(pid, &status, 0);

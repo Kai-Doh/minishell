@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+static t_token	*create_token(char *val, t_token *head)
+{
+	t_token	*new;
+
+	new = malloc(sizeof(t_token));
+	if (!new)
+	{
+		free(val);
+		free_tokens(head);
+		return (NULL);
+	}
+	new->content = val;
+	new->type = get_type(val);
+	new->next = NULL;
+	return (new);
+}
+
 t_token	*lexer_loop(char *s, int *i, int *error)
 {
 	t_token	*head;
@@ -21,15 +38,12 @@ t_token	*lexer_loop(char *s, int *i, int *error)
 
 	head = NULL;
 	val = extract_token(s, i, error);
-	while (val != NULL)
+	while (val)
 	{
-		new = malloc(sizeof(t_token));
-		if (new == NULL)
-			return (free_tokens(head), NULL);
-		new->content = val;
-		new->type = get_type(val);
-		new->next = NULL;
-		if (head == NULL)
+		new = create_token(val, head);
+		if (!new)
+			return (NULL);
+		if (!head)
 			head = new;
 		else
 			cur->next = new;

@@ -23,7 +23,10 @@ t_redir	*add_redir(t_token **tok, t_shell *sh)
 	r->type = (*tok)->type;
 	*tok = (*tok)->next;
 	if (!*tok)
+	{
+		free(r);
 		return (NULL);
+	}
 	r->file = expand_word((*tok)->content, sh);
 	r->next = NULL;
 	*tok = (*tok)->next;
