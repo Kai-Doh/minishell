@@ -94,3 +94,18 @@ char	**ft_strs_remove(char **env, int index)
 	ft_free_split(env);
 	return (new);
 }
+
+void	free_strs(char **strs)
+{
+	int	i;
+
+	if (!strs)
+		return ;
+	i = 0;
+	while (strs[i])
+	{
+		free(strs[i]);
+		i++;
+	}
+	free(strs);
+}
