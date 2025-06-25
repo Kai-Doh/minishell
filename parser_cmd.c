@@ -98,6 +98,11 @@ t_cmd	*parse(t_token *tok, t_shell *sh)
 	while (tok)
 	{
 		new = add_command(&tok, sh);
+		if (!new)
+		{
+			free_cmds(first);
+			return (NULL);
+		}
 		if (!first)
 			first = new;
 		else

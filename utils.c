@@ -52,7 +52,8 @@ char	**ft_args_add(char **arr, char *new_arg)
 		return (NULL);
 	while (i < count)
 	{
-		new[i] = arr[i];
+		new[i] = ft_strdup(arr[i]);
+		free(arr[i]);
 		i++;
 	}
 	new[count] = new_arg;

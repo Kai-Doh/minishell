@@ -42,7 +42,11 @@ t_token	*lexer_loop(char *s, int *i, int *error)
 	{
 		new = create_token(val, head);
 		if (!new)
+		{
+			free(val);
+			free_tokens(head);
 			return (NULL);
+		}
 		if (!head)
 			head = new;
 		else
