@@ -106,7 +106,6 @@ int		is_space(char c);
 int		is_special(char c);
 void	quote_error(int in_s, int *error);
 t_type	get_type(char *s);
-void	free_tokens(t_token *tok);
 
 /* ************************************************************************** */
 /*                                    Parser                                  */
@@ -119,7 +118,6 @@ char	*expand_word(char *s, t_shell *sh);
 char	*append_str(char *base, const char *add);
 char	*append_char(char *base, char c);
 char	*get_env_value(char *name, t_shell *sh);
-void	free_cmds(t_cmd *cmd);
 
 /* ************************************************************************** */
 /*                                    Execution                               */
