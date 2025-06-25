@@ -19,7 +19,7 @@ static int	shell_iteration(t_shell *sh)
 {
 	char	*line;
 	char	*prompt_str;
-	int		keep_running;
+	int	keep_running;
 
 	line = NULL;
 	prompt_str = prompt();
@@ -35,7 +35,10 @@ static int	shell_iteration(t_shell *sh)
 		return (1);
 	}
 	if (!line)
-		return (0);
+   {
+      ft_putendl_fd("exit", STDOUT_FILENO);
+      return (0);
+   }
 	keep_running = !handle_input(line, sh);
 	free(line);
 	return (keep_running);
@@ -83,11 +86,11 @@ static int	handle_input(char *rl, t_shell *sh)
 
 static char	*prompt(void)
 {
-	char	*username;
-	char	*start;
-	char	*end;
-	char	*full;
-	int		len;
+	char  *username;
+	char  *start;
+	char  *end;
+	char  *full;
+	int   len;
 
 	username = getenv("USER");
 	if (!username)
