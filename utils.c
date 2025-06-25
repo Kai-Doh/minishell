@@ -49,7 +49,10 @@ char	**ft_args_add(char **arr, char *new_arg)
 		count++;
 	new = malloc(sizeof(char *) * (count + 2));
 	if (!new)
+	{
+		free (new_arg);
 		return (NULL);
+	}
 	while (i < count)
 	{
 		new[i] = ft_strdup(arr[i]);
@@ -87,4 +90,19 @@ char	*strip_comments(char *line)
 		i++;
 	}
 	return (line);
+}
+
+void	free_strs(char **strs)
+{
+	int	i;
+
+	if (!strs)
+		return ;
+	i = 0;
+	while (strs[i])
+	{
+		free(strs[i]);
+		i++;
+	}
+	free(strs);
 }

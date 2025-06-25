@@ -47,24 +47,36 @@ int	ft_env(char **env)
 	return (0);
 }
 
+static void	free_partial(char **arr, int n)
+{
+	while (n-- > 0)
+		free(arr[n]);
+	free(arr);
+}
+
 char	**ft_strs_add(char **env, char *new_entry)
 {
-	int		i;
 	char	**new;
+	int		len;
+	int		i;
 
-	i = 0;
-	while (env && env[i])
-		i++;
-	new = malloc(sizeof(char *) * (i + 2));
+	len = 0;
+	while (env && env[len])
+		len++;
+	new = malloc(sizeof(char *) * (len + 2));
 	if (!new)
 		return (NULL);
 	i = 0;
-	while (env && env[i])
+	while (i < len)
 	{
 		new[i] = ft_strdup(env[i]);
+		if (!new[i])
+			return (free_partial(new, i), NULL);
 		i++;
 	}
 	new[i] = ft_strdup(new_entry);
+	if (!new[i])
+		return (free_partial(new, i), NULL);
 	new[i + 1] = NULL;
 	ft_free_split(env);
 	return (new);
@@ -93,19 +105,4 @@ char	**ft_strs_remove(char **env, int index)
 	new[j] = NULL;
 	ft_free_split(env);
 	return (new);
-}
-
-void	free_strs(char **strs)
-{
-	int	i;
-
-	if (!strs)
-		return ;
-	i = 0;
-	while (strs[i])
-	{
-		free(strs[i]);
-		i++;
-	}
-	free(strs);
 }

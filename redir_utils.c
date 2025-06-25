@@ -67,5 +67,8 @@ void	do_heredoc(t_redir *r)
 
 	fd = create_heredoc(r->file);
 	if (fd >= 0)
+	{
 		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
 }

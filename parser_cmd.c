@@ -47,7 +47,7 @@ static void	handle_redirr(t_cmd *cmd, t_token **tok, t_shell *sh
 	*last = r;
 }
 
-static void	fill_command(t_cmd *cmd, t_token **tok, t_shell *sh)
+static int	fill_command(t_cmd *cmd, t_token **tok, t_shell *sh)
 {
 	t_redir	*last;
 	char	*arg;
@@ -60,6 +60,8 @@ static void	fill_command(t_cmd *cmd, t_token **tok, t_shell *sh)
 		{
 			arg = expand_word((*tok)->content, sh);
 			cmd->args = ft_args_add(cmd->args, arg);
+			if (!cmd->args)
+				return (1);
 			*tok = (*tok)->next;
 		}
 		else if ((*tok)->type >= REDIR_IN && (*tok)->type <= APPEND)
@@ -67,6 +69,7 @@ static void	fill_command(t_cmd *cmd, t_token **tok, t_shell *sh)
 		else
 			*tok = (*tok)->next;
 	}
+	return (0);
 }
 
 t_cmd	*add_command(t_token **tok, t_shell *sh)
@@ -80,7 +83,11 @@ t_cmd	*add_command(t_token **tok, t_shell *sh)
 	cmd->args = NULL;
 	cmd->redir = NULL;
 	cmd->next = NULL;
-	fill_command(cmd, tok, sh);
+	if (fill_command(cmd, tok, sh))
+	{
+		free_cmds(cmd);
+		return (NULL);
+	}
 	if (*tok && (*tok)->type == PIPE)
 		*tok = (*tok)->next;
 	return (cmd);
