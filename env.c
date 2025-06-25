@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: github <github@kaidoh.ch>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/24 22:24:51 by github            #+#    #+#             */
-/*   Updated: 2025/06/24 22:24:51 by github           ###   ########.fr       */
+/*   Created: 2025/06/25 04:09:20 by github            #+#    #+#             */
+/*   Updated: 2025/06/25 04:09:23 by github           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **env)
+int	ft_env(char **env)
 {
-	t_shell	sh;
+	int	i;
 
-	(void)argv;
-	if (argc != 1)
-		exit_msg(ARGS, ERROR, NULL);
-	sh.env = dup_env(env);
-	if (!sh.env)
-		exit_msg("Memory allocation failed", 1, NULL);
-	sh.last_exit_status = 0;
-	setup_signals();
-	start_shell_loop(&sh);
-	ft_free_split(sh.env);
+	i = 0;
+	while (env && env[i])
+	{
+		if (ft_strchr(env[i], '='))
+			ft_putendl_fd(env[i], STDOUT_FILENO);
+		i++;
+	}
 	return (0);
 }

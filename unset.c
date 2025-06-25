@@ -16,6 +16,7 @@ int	ft_unset(char **args, t_shell *sh)
 {
 	int		i;
 	int		j;
+	char	**new_env;
 
 	i = 1;
 	while (args[i])
@@ -26,7 +27,9 @@ int	ft_unset(char **args, t_shell *sh)
 			if (!ft_strncmp(sh->env[j], args[i], ft_strlen(args[i]))
 				&& sh->env[j][ft_strlen(args[i])] == '=')
 			{
-				sh->env = ft_strs_remove(sh->env, j);
+				new_env = ft_strs_remove(sh->env, j);
+				if (new_env)
+					sh->env = new_env;
 				break ;
 			}
 			j++;

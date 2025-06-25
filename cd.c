@@ -16,6 +16,7 @@ static void	update_existing_var(t_shell *sh, const char *key, char *entry)
 {
 	int		i;
 	size_t	key_len;
+	char	**new_env;
 
 	i = 0;
 	key_len = ft_strlen(key);
@@ -31,7 +32,9 @@ static void	update_existing_var(t_shell *sh, const char *key, char *entry)
 		}
 		i++;
 	}
-	sh->env = ft_strs_add(sh->env, entry);
+	new_env = ft_strs_add(sh->env, entry);
+	if (new_env)
+		sh->env = new_env;
 	free(entry);
 }
 

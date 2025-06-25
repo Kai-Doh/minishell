@@ -27,24 +27,15 @@ char	**dup_env(char **env)
 	while (env[i])
 	{
 		new[i] = ft_strdup(env[i]);
+		if (!new[i])
+		{
+			ft_free_split(new);
+			return (NULL);
+		}
 		i++;
 	}
 	new[i] = NULL;
 	return (new);
-}
-
-int	ft_env(char **env)
-{
-	int	i;
-
-	i = 0;
-	while (env && env[i])
-	{
-		if (ft_strchr(env[i], '='))
-			ft_putendl_fd(env[i], STDOUT_FILENO);
-		i++;
-	}
-	return (0);
 }
 
 static void	free_partial(char **arr, int n)
@@ -52,6 +43,28 @@ static void	free_partial(char **arr, int n)
 	while (n-- > 0)
 		free(arr[n]);
 	free(arr);
+}
+
+static int	copy_except(char **src, char **dst, int idx)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (src[i])
+	{
+		if (i != idx)
+		{
+			dst[j] = ft_strdup(src[i]);
+			if (!dst[j])
+				return (free_partial(dst, j), 0);
+			j++;
+		}
+		i++;
+	}
+	dst[j] = NULL;
+	return (1);
 }
 
 char	**ft_strs_add(char **env, char *new_entry)
@@ -84,25 +97,17 @@ char	**ft_strs_add(char **env, char *new_entry)
 
 char	**ft_strs_remove(char **env, int index)
 {
-	int		i;
-	int		j;
 	char	**new;
+	int		len;
 
-	i = 0;
-	while (env && env[i])
-		i++;
-	new = malloc(sizeof(char *) * i);
+	len = 0;
+	while (env && env[len])
+		len++;
+	new = malloc(sizeof(char *) * len);
 	if (!new)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (env[i])
-	{
-		if (i != index)
-			new[j++] = ft_strdup(env[i]);
-		i++;
-	}
-	new[j] = NULL;
+	if (!copy_except(env, new, index))
+		return (NULL);
 	ft_free_split(env);
 	return (new);
 }
