@@ -56,6 +56,17 @@ static void	run_child(t_cmd *cmd, t_shell *sh, int in, int out)
 	child_process(cmd, sh, in, out);
 }
 
+static void	close_and_update(int *in, t_cmd *cmd, int fd[2])
+{
+	if (*in != STDIN_FILENO)
+		close(*in);
+	if (cmd->next)
+	{
+		close(fd[1]);
+		*in = fd[0];
+	}
+}
+
 void	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in)
 {
 	int		fd[2];
@@ -72,12 +83,10 @@ void	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in)
 	if (pid < 0)
 		exit_msg("Fork failed", 1, NULL);
 	if (pid == 0)
-		run_child(cmd, sh, *in, out);
-	if (*in != STDIN_FILENO)
-		close(*in);
-	if (cmd->next)
 	{
-		close(fd[1]);
-		*in = fd[0];
+		if (cmd->next)
+			close(fd[0]);
+		run_child(cmd, sh, *in, out);
 	}
+	close_and_update(in, cmd, fd);
 }
