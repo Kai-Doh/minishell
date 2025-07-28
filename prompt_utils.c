@@ -69,6 +69,8 @@ char	*build_prompt(void)
 	char	*part1;
 	char	*result;
 
+	if (!isatty(STDIN_FILENO))
+		return (ft_strdup("__MINISHELL_PROMPT__ "));
 	username = getenv("USER");
 	if (!username)
 		username = "unknown";

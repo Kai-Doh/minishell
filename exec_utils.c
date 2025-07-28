@@ -80,6 +80,7 @@ static void	wait_all(pid_t last_pid, t_shell *sh)
 	pid_t	pid;
 	int		last_status;
 
+	signal(SIGINT, SIG_IGN);
 	last_status = 0;
 	pid = wait(&status);
 	while (pid > 0)
@@ -88,8 +89,14 @@ static void	wait_all(pid_t last_pid, t_shell *sh)
 			last_status = status;
 		pid = wait(&status);
 	}
+	setup_signals();
 	if (WIFEXITED(last_status))
 		sh->last_exit_status = WEXITSTATUS(last_status);
+	else if (WIFSIGNALED(last_status) && WTERMSIG(last_status) == SIGINT)
+	{
+		sh->last_exit_status = 130;
+		write(1, "\n", 1);
+	}
 	else
 		sh->last_exit_status = 1;
 }

@@ -26,6 +26,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <dirent.h>
 # include "./Libft/libft.h"
 
 /* ************************************************************************** */
@@ -113,6 +114,7 @@ t_cmd	*parse(t_token *tok, t_shell *sh);
 t_cmd	*add_command(t_token **tok, t_shell *sh);
 t_redir	*add_redir(t_token **tok, t_shell *sh);
 char	*expand_word(char *s, t_shell *sh);
+char	*expand_wildcards(char *s);
 char	*append_str(char *base, const char *add);
 char	*append_char(char *base, char c);
 char	*get_env_value(char *name, t_shell *sh);
@@ -190,5 +192,13 @@ char	*strip_comments(char *line);
 char	*get_short_pwd(void);
 char	*build_prompt(void);
 int		lexer_fail(int err, t_shell *sh);
+int		is_variable_assignment(char *str);
+int		handle_variable_assignment(char *str, t_shell *sh);
+void	set_env_var(t_shell *sh, const char *key, const char *value);
+void	handle_dollar_expand(char **res, char *s, size_t *i, t_shell *sh);
+void	process_quote_state(char c, int *in_s, int *in_d);
+void	process_expansion_logic(char **res, char *s, size_t *i, t_shell *sh);
+int		cd_validate_args(char **args);
+void	update_pwd_vars(t_shell *sh, char *old, char *cwd);
 
 #endif

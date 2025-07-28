@@ -21,7 +21,8 @@ static int	handle_readline_result(char *line, t_shell *sh)
 
 	if (!line)
 	{
-		ft_putendl_fd("exit", STDOUT_FILENO);
+		if (isatty(STDIN_FILENO))
+			ft_putendl_fd("exit", STDOUT_FILENO);
 		return (0);
 	}
 	keep_running = !handle_input(line, sh);

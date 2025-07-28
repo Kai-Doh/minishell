@@ -56,7 +56,16 @@ int	handle_word_token(t_cmd *cmd, t_token **tok, t_shell *sh)
 	char	*arg;
 
 	arg = expand_word((*tok)->content, sh);
-	if (arg && arg[0] != '\0')
+	if (!cmd->args && is_variable_assignment(arg))
+	{
+		if (handle_variable_assignment(arg, sh))
+		{
+			free(arg);
+			return (1);
+		}
+		free(arg);
+	}
+	else if (arg && arg[0] != '\0')
 	{
 		cmd->args = ft_args_add(cmd->args, arg);
 		if (!cmd->args)
