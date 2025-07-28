@@ -85,7 +85,7 @@ int	ft_cd(char **args, t_shell *sh)
 	if (args[1] && args[2])
 	{
 		ft_putendl_fd("cd: too many arguments", 2);
-		return (1);
+		return (2);
 	}
 	if (getcwd(old, sizeof(old)) == NULL)
 		old[0] = '\0';

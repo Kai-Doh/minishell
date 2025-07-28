@@ -41,12 +41,12 @@ int	ft_exit(char **args, t_shell *sh)
 		ft_putstr_fd(args[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
 		ft_free_split(sh->env);
-		exit(255);
+		exit(2);
 	}
 	if (args[1] && args[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
-		return (1);
+		return (2);
 	}
 	if (args[1])
 		code = ft_atoi(args[1]);

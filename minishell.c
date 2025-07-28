@@ -22,6 +22,7 @@ int	main(int argc, char **argv, char **env)
 	sh.env = dup_env(env);
 	if (!sh.env)
 		exit_msg("Memory allocation failed", 1, NULL);
+	increment_shlvl(&sh);
 	sh.last_exit_status = 0;
 	setup_signals();
 	start_shell_loop(&sh);

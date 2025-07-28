@@ -50,19 +50,14 @@ static void	handle_redirr(t_cmd *cmd, t_token **tok, t_shell *sh
 static int	fill_command(t_cmd *cmd, t_token **tok, t_shell *sh)
 {
 	t_redir	*last;
-	char	*arg;
 
 	last = NULL;
-	arg = NULL;
 	while (*tok && (*tok)->type != PIPE)
 	{
 		if ((*tok)->type == WORD)
 		{
-			arg = expand_word((*tok)->content, sh);
-			cmd->args = ft_args_add(cmd->args, arg);
-			if (!cmd->args)
+			if (handle_word_token(cmd, tok, sh))
 				return (1);
-			*tok = (*tok)->next;
 		}
 		else if ((*tok)->type >= REDIR_IN && (*tok)->type <= APPEND)
 			handle_redirr(cmd, tok, sh, &last);

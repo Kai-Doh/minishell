@@ -15,46 +15,38 @@
 static char	*prompt(void);
 static int	handle_input(char *rl, t_shell *sh);
 
+static int	handle_readline_result(char *line, t_shell *sh)
+{
+	int	keep_running;
+
+	if (!line)
+	{
+		ft_putendl_fd("exit", STDOUT_FILENO);
+		return (0);
+	}
+	keep_running = !handle_input(line, sh);
+	free(line);
+	return (keep_running);
+}
+
 static int	shell_iteration(t_shell *sh)
 {
 	char	*line;
 	char	*prompt_str;
-	int	keep_running;
 
-	line = NULL;
+	update_env_from_system(sh);
 	prompt_str = prompt();
 	if (!prompt_str)
 		return (1);
 	line = readline(prompt_str);
 	free(prompt_str);
-	if (g_signal == SIGINT)
-	{
-		sh->last_exit_status = 130;
-		g_signal = 0;
-		free(line);
-		return (1);
-	}
-	if (!line)
-   {
-      ft_putendl_fd("exit", STDOUT_FILENO);
-      return (0);
-   }
-	keep_running = !handle_input(line, sh);
-	free(line);
-	return (keep_running);
+	return (handle_readline_result(line, sh));
 }
 
 void	start_shell_loop(t_shell *sh)
 {
 	while (shell_iteration(sh))
 		;
-}
-
-static int	lexer_fail(int err, t_shell *sh)
-{
-	if (err)
-		sh->last_exit_status = 2;
-	return (0);
 }
 
 static int	handle_input(char *rl, t_shell *sh)
@@ -86,23 +78,5 @@ static int	handle_input(char *rl, t_shell *sh)
 
 static char	*prompt(void)
 {
-	char  *username;
-	char  *start;
-	char  *end;
-	char  *full;
-	int   len;
-
-	username = getenv("USER");
-	if (!username)
-		username = "unknown";
-	start = GREEN "👾 Minishell" YELLOW "@";
-	end = GREEN " ➜ " RESET;
-	len = ft_strlen(start) + ft_strlen(username) + ft_strlen(end) + 1;
-	full = malloc(len);
-	if (!full)
-		return (NULL);
-	ft_strlcpy(full, start, len);
-	ft_strlcat(full, username, len);
-	ft_strlcat(full, end, len);
-	return (full);
+	return (build_prompt());
 }

@@ -50,3 +50,20 @@ char	*get_env_value(char *name, t_shell *sh)
 	}
 	return ("");
 }
+
+int	handle_word_token(t_cmd *cmd, t_token **tok, t_shell *sh)
+{
+	char	*arg;
+
+	arg = expand_word((*tok)->content, sh);
+	if (arg && arg[0] != '\0')
+	{
+		cmd->args = ft_args_add(cmd->args, arg);
+		if (!cmd->args)
+			return (1);
+	}
+	else
+		free(arg);
+	*tok = (*tok)->next;
+	return (0);
+}

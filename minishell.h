@@ -56,8 +56,6 @@ typedef struct s_shell
 	int		last_exit_status;
 }	t_shell;
 
-extern volatile sig_atomic_t	g_signal;
-
 typedef enum e_type
 {
 	WORD,
@@ -118,13 +116,16 @@ char	*expand_word(char *s, t_shell *sh);
 char	*append_str(char *base, const char *add);
 char	*append_char(char *base, char c);
 char	*get_env_value(char *name, t_shell *sh);
+int		handle_word_token(t_cmd *cmd, t_token **tok, t_shell *sh);
 
 /* ************************************************************************** */
 /*                                    Execution                               */
 /* ************************************************************************** */
 
 int		execute(t_cmd *cmd, t_shell *sh);
-void	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in);
+pid_t	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in);
+char	*handle_path_cmd(char *cmd_name);
+char	*handle_local_cmd(char *cmd_name, char **env);
 
 /* ************************************************************************** */
 /*                                 Redirections                               */
@@ -180,9 +181,14 @@ int		ft_env(char **env);
 int		ft_export(char **args, t_shell *sh);
 int		ft_unset(char **args, t_shell *sh);
 char	**dup_env(char **env);
+void	update_env_from_system(t_shell *sh);
+void	increment_shlvl(t_shell *sh);
 char	**ft_strs_add(char **env, char *new_entry);
 char	**ft_strs_remove(char **env, int index);
 char	**ft_args_add(char **arr, char *new_arg);
 char	*strip_comments(char *line);
+char	*get_short_pwd(void);
+char	*build_prompt(void);
+int		lexer_fail(int err, t_shell *sh);
 
 #endif

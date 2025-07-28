@@ -18,12 +18,18 @@ static void	exec_cmd(t_cmd *cmd, char **env)
 
 	if (!cmd->args || !cmd->args[0])
 		exit(0);
-	path = find_command_path(cmd->args[0], env);
-	if (!path)
+	if (ft_strchr(cmd->args[0], '/'))
+		path = handle_path_cmd(cmd->args[0]);
+	else
 	{
-		ft_putstr_fd("minishell: command not found: ", 2);
-		ft_putendl_fd(cmd->args[0], 2);
-		exit(127);
+		path = handle_local_cmd(cmd->args[0], env);
+		if (!path)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd->args[0], 2);
+			ft_putendl_fd(": command not found", 2);
+			exit(127);
+		}
 	}
 	execve(path, cmd->args, env);
 	perror(path);
@@ -67,7 +73,7 @@ static void	close_and_update(int *in, t_cmd *cmd, int fd[2])
 	}
 }
 
-void	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in)
+pid_t	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in)
 {
 	int		fd[2];
 	pid_t	pid;
@@ -89,4 +95,5 @@ void	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in)
 		run_child(cmd, sh, *in, out);
 	}
 	close_and_update(in, cmd, fd);
+	return (pid);
 }

@@ -4,3 +4,5 @@
 *.h.pch
 *.h.gch
 *.o
+CLAUDE.md
+*.log
