@@ -14,20 +14,7 @@
 
 static void	update_env_var(t_shell *sh, const char *key, const char *val)
 {
-	char	*tmp;
-	char	*entry;
-
-	tmp = NULL;
-	entry = NULL;
-	tmp = ft_strjoin(key, "=");
-	if (!tmp)
-		return ;
-	entry = ft_strjoin(tmp, val);
-	free(tmp);
-	if (!entry)
-		return ;
-	set_env_var(sh, key, entry);
-	free(entry);
+	set_env_var(sh, key, val);
 }
 
 int	cd_validate_args(char **args)
