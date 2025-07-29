@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # minishell
 Your shell should:
 • Display a prompt when waiting for a new command.
@@ -183,5 +181,3 @@ foreground pipeline.
 - Use `echo $USER`, `echo "$USER"`
 - Confirm variable interpolation inside double quotes.
 - Set or ensure `$USER` exists.
->>>>>>> 43b4f90 (test)
-
