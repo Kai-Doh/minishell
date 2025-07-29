@@ -10,26 +10,50 @@ NAME   = minishell
 
 # Compiler / flags
 CC      = gcc
-CFLAGS  = -Wall -Wextra -Werror -g -I.
-LDLIBS  = -lreadline -lhistory -lncurses   # or -ltermcap
+CFLAGS  = -Wall -Wextra -Werror -g -Iinclude -ILibft
+LDLIBS  = -lreadline -lhistory -lncurses
 
-# Sources / objects
-SRCS = minishell.c prompt.c exec.c heredoc.c lexer.c parser.c path.c redir_utils.c utils.c signals.c dispatcher.c echo.c pwd.c cd.c exit.c env_utils.c export.c unset.c exec_utils.c lexer_token.c lexer_utils.c parser_utils.c parser_cmd.c free_cmds.c env.c env_manager.c prompt_utils.c shlvl_utils.c input_utils.c variable_assignment.c env_management.c parser_expansion.c parser_helpers.c cd_helpers.c wildcard_expansion.c
-OBJS = $(SRCS:.c=.o)
+# Directories
+SRCDIR   = src
+OBJDIR   = obj
+INCDIR   = include
+LIBFTDIR = Libft
+
+# Source files organized by category
+CORE_SRCS = $(SRCDIR)/core/minishell.c $(SRCDIR)/core/prompt.c $(SRCDIR)/core/prompt_utils.c $(SRCDIR)/core/signals.c
+
+BUILTIN_SRCS = $(SRCDIR)/builtin/dispatcher.c $(SRCDIR)/builtin/echo.c $(SRCDIR)/builtin/pwd.c $(SRCDIR)/builtin/cd.c $(SRCDIR)/builtin/cd_helpers.c $(SRCDIR)/builtin/exit.c $(SRCDIR)/builtin/env.c $(SRCDIR)/builtin/env_utils.c $(SRCDIR)/builtin/env_manager.c $(SRCDIR)/builtin/env_management.c $(SRCDIR)/builtin/export.c $(SRCDIR)/builtin/unset.c
+
+PARSING_SRCS = $(SRCDIR)/parsing/lexer.c $(SRCDIR)/parsing/lexer_token.c $(SRCDIR)/parsing/lexer_utils.c $(SRCDIR)/parsing/parser.c $(SRCDIR)/parsing/parser_cmd.c $(SRCDIR)/parsing/parser_utils.c $(SRCDIR)/parsing/parser_expansion.c $(SRCDIR)/parsing/parser_helpers.c $(SRCDIR)/parsing/syntax_validation.c
+
+EXECUTION_SRCS = $(SRCDIR)/execution/exec.c $(SRCDIR)/execution/exec_utils.c $(SRCDIR)/execution/path.c $(SRCDIR)/execution/redir_utils.c $(SRCDIR)/execution/heredoc.c $(SRCDIR)/execution/process_wait.c
+
+UTILS_SRCS = $(SRCDIR)/utils/utils.c $(SRCDIR)/utils/free_cmds.c $(SRCDIR)/utils/input_utils.c $(SRCDIR)/utils/variable_assignment.c $(SRCDIR)/utils/shlvl_utils.c $(SRCDIR)/utils/string_utils.c $(SRCDIR)/utils/wildcard_expansion.c
+
+# All source files
+SRCS = $(CORE_SRCS) $(BUILTIN_SRCS) $(PARSING_SRCS) $(EXECUTION_SRCS) $(UTILS_SRCS)
+
+# Object files
+OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 # libft
-LIBFT_DIR = ./Libft
-LIBFT     = $(LIBFT_DIR)/libft.a
+LIBFT = $(LIBFTDIR)/libft.a
 
 # Rules
 all: $(LIBFT) $(NAME)
 
 $(LIBFT):
 	@printf "$(BLUE)Building libft...$(RESET)\n"
-	@$(MAKE) -C $(LIBFT_DIR) bonus
+	@$(MAKE) -C $(LIBFTDIR) bonus
 	@printf "$(GREEN)✓ libft built.$(RESET)\n"
 
-%.o: %.c
+# Create object directories
+$(OBJDIR):
+	@mkdir -p $(OBJDIR)
+	@mkdir -p $(OBJDIR)/core $(OBJDIR)/builtin $(OBJDIR)/parsing $(OBJDIR)/execution $(OBJDIR)/utils
+
+# Compile source files to object files
+$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
 	@printf "$(BLUE)Compiling $<...$(RESET)\n"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
@@ -40,14 +64,14 @@ $(NAME): $(OBJS) $(LIBFT)
 
 clean:
 	@printf "$(RED)Cleaning object files...$(RESET)\n"
-	@$(RM) $(OBJS)
-	@$(MAKE) -C $(LIBFT_DIR) clean
+	@$(RM) -rf $(OBJDIR)
+	@$(MAKE) -C $(LIBFTDIR) clean
 	@printf "$(GREEN)✓ Objects removed.$(RESET)\n"
 
 fclean: clean
 	@printf "$(RED)Removing $(NAME)...$(RESET)\n"
 	@$(RM) $(NAME)
-	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(MAKE) -C $(LIBFTDIR) fclean
 	@printf "$(GREEN)✓ Full clean done.$(RESET)\n"
 
 re: fclean all

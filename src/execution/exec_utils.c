@@ -1,0 +1,105 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ktiomico <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/24 22:59:42 by ktiomico          #+#    #+#             */
+/*   Updated: 2025/06/24 22:59:44 by ktiomico         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+char	*handle_path_cmd(char *cmd_name)
+{
+	struct stat	st;
+
+	if (stat(cmd_name, &st) != 0)
+	{
+		perror(cmd_name);
+		exit(127);
+	}
+	if (S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd_name, 2);
+		ft_putendl_fd(": Is a directory", 2);
+		exit(126);
+	}
+	return (ft_strdup(cmd_name));
+}
+
+char	*handle_local_cmd(char *cmd_name, char **env)
+{
+	return (find_command_path(cmd_name, env));
+}
+
+static int	exec_single_builtin(t_cmd *cmd, t_shell *sh)
+{
+	int	save_in;
+	int	save_out;
+	int	status;
+
+	save_in = dup(STDIN_FILENO);
+	save_out = dup(STDOUT_FILENO);
+	if (handle_redir(cmd->redir) != 0)
+	{
+		dup2(save_in, STDIN_FILENO);
+		dup2(save_out, STDOUT_FILENO);
+		close(save_in);
+		close(save_out);
+		sh->last_exit_status = 1;
+		return (1);
+	}
+	status = run_builtin(cmd, sh);
+	sh->last_exit_status = status;
+	dup2(save_in, STDIN_FILENO);
+	dup2(save_out, STDOUT_FILENO);
+	close(save_in);
+	close(save_out);
+	return (status);
+}
+
+static int	execute_pipeline(t_cmd *cmd, t_shell *sh)
+{
+	int		in;
+	pid_t	last_pid;
+	t_cmd	*current;
+
+	in = STDIN_FILENO;
+	current = cmd;
+	while (current)
+	{
+		last_pid = pipe_and_fork(current, sh, &in);
+		current = current->next;
+	}
+	wait_all(last_pid, sh);
+	return (sh->last_exit_status);
+}
+
+int	execute(t_cmd *cmd, t_shell *sh)
+{
+	if (!cmd)
+	{
+		sh->last_exit_status = 0;
+		return (0);
+	}
+	if ((!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0') && !cmd->redir)
+	{
+		if (cmd->args && cmd->args[0] && cmd->args[0][0] == '\0')
+			sh->last_exit_status = 127;
+		else
+			sh->last_exit_status = 0;
+		return (0);
+	}
+	if ((!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0') && cmd->redir)
+	{
+		return (execute_pipeline(cmd, sh));
+	}
+	if (cmd && !cmd->next && cmd->args && cmd->args[0]
+		&& is_builtin(cmd->args[0]))
+		return (exec_single_builtin(cmd, sh));
+	return (execute_pipeline(cmd, sh));
+}
