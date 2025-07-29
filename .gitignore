@@ -6,3 +6,4 @@
 *.o
 CLAUDE.md
 *.log
+.claude
