@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 static char	*handle_pwd_env(char *name, t_shell *sh)
 {
 	(void)sh;

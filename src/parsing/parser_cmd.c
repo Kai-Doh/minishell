@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+
 t_redir	*add_redir(t_token **tok, t_shell *sh)
 {
 	t_redir	*r;

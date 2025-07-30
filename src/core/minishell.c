@@ -27,5 +27,6 @@ int	main(int argc, char **argv, char **env)
 	setup_signals();
 	start_shell_loop(&sh);
 	ft_free_split(sh.env);
+	clear_history();
 	return (sh.last_exit_status);
 }

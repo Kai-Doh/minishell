@@ -52,12 +52,20 @@ void	remove_previous_heredocs(t_cmd *cmd)
 void	handle_redirr(t_cmd *cmd, t_token **tok, t_shell *sh, t_redir **last)
 {
 	t_redir	*r;
+	t_redir	*curr;
 
 	r = add_redir(tok, sh);
 	if (!r)
 		return ;
 	if (r->type == HEREDOC)
+	{
 		remove_previous_heredocs(cmd);
+		*last = NULL;
+		curr = cmd->redir;
+		while (curr && curr->next)
+			curr = curr->next;
+		*last = curr;
+	}
 	if (!cmd->redir)
 		cmd->redir = r;
 	else if (*last)
