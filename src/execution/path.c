@@ -12,20 +12,46 @@
 
 #include "minishell.h"
 
-void	ft_free_split(char **arr);
-char	*join_path(char *dir, char *cmd);
-char	*get_path_variable(char **env);
-int		is_valid_executable(char *full);
+char		*get_path_variable(char **env);
+int			is_valid_executable(char *full);
+static char	*check_current_dir(char *cmd);
+static char	*search_in_paths(char *cmd, char **env);
 
 char	*find_command_path(char *cmd, char **env)
+{
+	char	*result;
+
+	if (ft_strchr(cmd, '/'))
+		return (ft_strdup(cmd));
+	result = check_current_dir(cmd);
+	if (result)
+		return (result);
+	return (search_in_paths(cmd, env));
+}
+
+static char	*check_current_dir(char *cmd)
+{
+	struct stat	st;
+
+	if (stat(cmd, &st) == 0 && !S_ISDIR(st.st_mode))
+	{
+		if (access(cmd, X_OK) != 0)
+		{
+			perror(cmd);
+			exit(126);
+		}
+		return (ft_strdup(cmd));
+	}
+	return (NULL);
+}
+
+static char	*search_in_paths(char *cmd, char **env)
 {
 	char	**paths;
 	char	*path_val;
 	char	*full;
 	int		i;
 
-	if (ft_strchr(cmd, '/'))
-		return (ft_strdup(cmd));
 	path_val = get_path_variable(env);
 	if (!path_val && is_valid_executable(cmd))
 		return (ft_strdup(cmd));
@@ -54,29 +80,6 @@ int	is_valid_executable(char *full)
 	if (stat(full, &st) != 0 || S_ISDIR(st.st_mode))
 		return (0);
 	return (1);
-}
-
-void	ft_free_split(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr && arr[i])
-		free(arr[i++]);
-	free(arr);
-}
-
-char	*join_path(char *dir, char *cmd)
-{
-	char	*tmp;
-	char	*full;
-
-	tmp = ft_strjoin(dir, "/");
-	if (!tmp)
-		return (NULL);
-	full = ft_strjoin(tmp, cmd);
-	free(tmp);
-	return (full);
 }
 
 char	*get_path_variable(char **env)

@@ -91,10 +91,3 @@ char	*strip_comments(char *line)
 	}
 	return (line);
 }
-
-int	lexer_fail(int err, t_shell *sh)
-{
-	if (err == 1 || err == 2)
-		sh->last_exit_status = 2;
-	return (0);
-}

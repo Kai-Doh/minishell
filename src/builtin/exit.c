@@ -72,7 +72,7 @@ int	ft_exit(char **args, t_shell *sh)
 	if (args[1] && args[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
-		return (1);
+		return (2);
 	}
 	if (args[1])
 		code = ft_atoi(args[1]);

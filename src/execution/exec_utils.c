@@ -28,6 +28,11 @@ char	*handle_path_cmd(char *cmd_name)
 		ft_putendl_fd(": Is a directory", 2);
 		exit(126);
 	}
+	if (access(cmd_name, X_OK) != 0)
+	{
+		perror(cmd_name);
+		exit(126);
+	}
 	return (ft_strdup(cmd_name));
 }
 

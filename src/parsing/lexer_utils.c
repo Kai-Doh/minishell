@@ -39,3 +39,10 @@ void	quote_error(int in_s, int *error)
 	if (error)
 		*error = 1;
 }
+
+int	lexer_fail(int err, t_shell *sh)
+{
+	if (err == 1 || err == 2)
+		sh->last_exit_status = 2;
+	return (0);
+}

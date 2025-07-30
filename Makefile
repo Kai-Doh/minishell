@@ -28,7 +28,7 @@ PARSING_SRCS = $(SRCDIR)/parsing/lexer.c $(SRCDIR)/parsing/lexer_token.c $(SRCDI
 
 EXECUTION_SRCS = $(SRCDIR)/execution/exec.c $(SRCDIR)/execution/exec_utils.c $(SRCDIR)/execution/path.c $(SRCDIR)/execution/redir_utils.c $(SRCDIR)/execution/heredoc.c $(SRCDIR)/execution/process_wait.c
 
-UTILS_SRCS = $(SRCDIR)/utils/utils.c $(SRCDIR)/utils/free_cmds.c $(SRCDIR)/utils/input_utils.c $(SRCDIR)/utils/variable_assignment.c $(SRCDIR)/utils/shlvl_utils.c $(SRCDIR)/utils/string_utils.c $(SRCDIR)/utils/wildcard_expansion.c
+UTILS_SRCS = $(SRCDIR)/utils/utils.c $(SRCDIR)/utils/path_utils.c $(SRCDIR)/utils/free_cmds.c $(SRCDIR)/utils/input_utils.c $(SRCDIR)/utils/variable_assignment.c $(SRCDIR)/utils/shlvl_utils.c $(SRCDIR)/utils/string_utils.c $(SRCDIR)/utils/wildcard_expansion.c
 
 # All source files
 SRCS = $(CORE_SRCS) $(BUILTIN_SRCS) $(PARSING_SRCS) $(EXECUTION_SRCS) $(UTILS_SRCS)
