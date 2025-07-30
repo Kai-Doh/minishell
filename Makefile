@@ -20,7 +20,7 @@ INCDIR   = include
 LIBFTDIR = Libft
 
 # Source files organized by category
-CORE_SRCS = $(SRCDIR)/core/minishell.c $(SRCDIR)/core/prompt.c $(SRCDIR)/core/prompt_utils.c $(SRCDIR)/core/signals.c
+CORE_SRCS = $(SRCDIR)/core/minishell.c $(SRCDIR)/core/prompt.c $(SRCDIR)/core/prompt_utils.c $(SRCDIR)/core/signals.c $(SRCDIR)/core/readline_terminal.c
 
 BUILTIN_SRCS = $(SRCDIR)/builtin/dispatcher.c $(SRCDIR)/builtin/echo.c $(SRCDIR)/builtin/pwd.c $(SRCDIR)/builtin/cd.c $(SRCDIR)/builtin/cd_helpers.c $(SRCDIR)/builtin/exit.c $(SRCDIR)/builtin/env.c $(SRCDIR)/builtin/env_utils.c $(SRCDIR)/builtin/env_manager.c $(SRCDIR)/builtin/env_management.c $(SRCDIR)/builtin/export.c $(SRCDIR)/builtin/unset.c
 

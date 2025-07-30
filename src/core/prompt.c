@@ -38,7 +38,7 @@ static int	shell_iteration(t_shell *sh)
 	prompt_str = prompt();
 	if (!prompt_str)
 		return (1);
-	line = readline(prompt_str);
+	line = safe_readline(prompt_str);
 	free(prompt_str);
 	return (handle_readline_result(line, sh));
 }

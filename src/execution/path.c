@@ -23,10 +23,10 @@ char	*find_command_path(char *cmd, char **env)
 
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
-	result = check_current_dir(cmd);
+	result = search_in_paths(cmd, env);
 	if (result)
 		return (result);
-	return (search_in_paths(cmd, env));
+	return (check_current_dir(cmd));
 }
 
 static char	*check_current_dir(char *cmd)
