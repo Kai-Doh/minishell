@@ -21,6 +21,7 @@ t_redir	*add_redir(t_token **tok, t_shell *sh)
 	if (!r)
 		return (NULL);
 	r->type = (*tok)->type;
+	r->heredoc_fd = -1;
 	*tok = (*tok)->next;
 	if (!*tok)
 	{
@@ -28,23 +29,11 @@ t_redir	*add_redir(t_token **tok, t_shell *sh)
 		return (NULL);
 	}
 	r->file = expand_word((*tok)->content, sh);
+	if (r->type == HEREDOC)
+		r->heredoc_fd = create_heredoc(r->file);
 	r->next = NULL;
 	*tok = (*tok)->next;
 	return (r);
-}
-
-static void	handle_redirr(t_cmd *cmd, t_token **tok, t_shell *sh
-	, t_redir **last)
-{
-	t_redir	*r;
-
-	r = NULL;
-	r = add_redir(tok, sh);
-	if (!cmd->redir)
-		cmd->redir = r;
-	else if (*last)
-		(*last)->next = r;
-	*last = r;
 }
 
 static int	fill_command(t_cmd *cmd, t_token **tok, t_shell *sh)

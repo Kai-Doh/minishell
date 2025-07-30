@@ -91,12 +91,9 @@ int	do_redir_append(t_redir *r)
 
 void	do_heredoc(t_redir *r)
 {
-	int	fd;
-
-	fd = create_heredoc(r->file);
-	if (fd >= 0)
+	if (r->heredoc_fd >= 0)
 	{
-		dup2(fd, STDIN_FILENO);
-		close(fd);
+		dup2(r->heredoc_fd, STDIN_FILENO);
+		close(r->heredoc_fd);
 	}
 }

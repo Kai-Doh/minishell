@@ -19,6 +19,8 @@ static void	free_redirections(t_redir *r)
 	while (r)
 	{
 		r_next = r->next;
+		if (r->type == HEREDOC && r->heredoc_fd >= 0)
+			close(r->heredoc_fd);
 		free(r->file);
 		free(r);
 		r = r_next;

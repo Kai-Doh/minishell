@@ -18,11 +18,14 @@ static int	validate_initial_tokens(t_token *tok, t_shell *sh)
 		return (0);
 	if (tok->type == PIPE)
 	{
+		ft_putendl_fd("minishell: syntax error near unexpected token `|'", 2);
 		sh->last_exit_status = 2;
 		return (1);
 	}
 	if (is_all_operators(tok))
 	{
+		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
+			2);
 		sh->last_exit_status = 2;
 		return (1);
 	}
@@ -35,11 +38,15 @@ static int	check_pipe_error(t_token *curr, t_shell *sh)
 	{
 		if (!curr->next)
 		{
+			ft_putendl_fd(
+				"minishell: syntax error near unexpected token `newline'", 2);
 			sh->last_exit_status = 2;
 			return (1);
 		}
 		if (curr->next->type == PIPE)
 		{
+			ft_putendl_fd("minishell: syntax error near unexpected token `|'",
+				2);
 			sh->last_exit_status = 2;
 			return (1);
 		}
@@ -52,6 +59,15 @@ static int	check_redir_error(t_token *curr, t_shell *sh)
 	if (curr->type >= REDIR_IN && curr->type <= APPEND
 		&& (!curr->next || curr->next->type != WORD))
 	{
+		ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
+		if (!curr->next)
+			ft_putendl_fd("`newline'", 2);
+		else
+		{
+			ft_putstr_fd("`", 2);
+			ft_putstr_fd(curr->next->content, 2);
+			ft_putendl_fd("'", 2);
+		}
 		sh->last_exit_status = 2;
 		return (1);
 	}
@@ -74,6 +90,8 @@ static int	validate_token_sequence(t_token *tok, t_shell *sh)
 	}
 	if (prev && prev->type == PIPE)
 	{
+		ft_putendl_fd("minishell: syntax error near unexpected token `newline'",
+			2);
 		sh->last_exit_status = 2;
 		return (1);
 	}

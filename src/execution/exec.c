@@ -45,6 +45,14 @@ static void	exec_cmd(t_cmd *cmd, char **env)
 	}
 	path = get_cmd_path(cmd, env);
 	execve(path, cmd->args, env);
+	if (errno == ENOEXEC || errno == EACCES)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putendl_fd(": command not found", 2);
+		free(path);
+		exit(127);
+	}
 	perror(path);
 	free(path);
 	exit(126);
@@ -78,6 +86,8 @@ static void	close_and_update(int *in, t_cmd *cmd, int fd[2])
 		close(fd[1]);
 		*in = fd[0];
 	}
+	else
+		*in = STDIN_FILENO;
 }
 
 pid_t	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in)

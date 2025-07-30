@@ -56,6 +56,18 @@ static int	is_numeric(char *str)
 	return (is_valid_long(str));
 }
 
+static void	cleanup_all_fds(void)
+{
+	int	fd;
+
+	fd = 3;
+	while (fd < 1024)
+	{
+		close(fd);
+		fd++;
+	}
+}
+
 int	ft_exit(char **args, t_shell *sh)
 {
 	int	code;
@@ -66,6 +78,7 @@ int	ft_exit(char **args, t_shell *sh)
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
+		cleanup_all_fds();
 		ft_free_split(sh->env);
 		exit(2);
 	}
@@ -78,6 +91,7 @@ int	ft_exit(char **args, t_shell *sh)
 		code = ft_atoi(args[1]);
 	else
 		code = sh->last_exit_status;
+	cleanup_all_fds();
 	ft_free_split(sh->env);
 	exit(code);
 }

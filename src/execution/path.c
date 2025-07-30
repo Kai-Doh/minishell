@@ -35,12 +35,8 @@ static char	*check_current_dir(char *cmd)
 
 	if (stat(cmd, &st) == 0 && !S_ISDIR(st.st_mode))
 	{
-		if (access(cmd, X_OK) != 0)
-		{
-			perror(cmd);
-			exit(126);
-		}
-		return (ft_strdup(cmd));
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
 	}
 	return (NULL);
 }

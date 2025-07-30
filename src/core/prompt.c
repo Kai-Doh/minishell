@@ -69,7 +69,7 @@ static int	handle_input(char *rl, t_shell *sh)
 	{
 		free_tokens(tokens);
 		if (sh->last_exit_status == 2)
-			return (1);
+			return (0);
 		return (0);
 	}
 	execute(cmds, sh);

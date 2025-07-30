@@ -30,8 +30,10 @@ char	*handle_path_cmd(char *cmd_name)
 	}
 	if (access(cmd_name, X_OK) != 0)
 	{
-		perror(cmd_name);
-		exit(126);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd_name, 2);
+		ft_putendl_fd(": command not found", 2);
+		exit(127);
 	}
 	return (ft_strdup(cmd_name));
 }
@@ -51,23 +53,25 @@ static int	exec_single_builtin(t_cmd *cmd, t_shell *sh)
 	save_out = dup(STDOUT_FILENO);
 	if (handle_redir(cmd->redir) != 0)
 	{
-		dup2(save_in, STDIN_FILENO);
-		dup2(save_out, STDOUT_FILENO);
-		close(save_in);
-		close(save_out);
+		restore_fds(save_in, save_out);
 		sh->last_exit_status = 1;
 		return (1);
 	}
-	status = run_builtin(cmd, sh);
-	sh->last_exit_status = status;
-	dup2(save_in, STDIN_FILENO);
-	dup2(save_out, STDOUT_FILENO);
-	close(save_in);
-	close(save_out);
+	if (cmd->args[0] && !ft_strncmp(cmd->args[0], "exit", 5))
+	{
+		restore_fds(save_in, save_out);
+		status = run_builtin(cmd, sh);
+	}
+	else
+	{
+		status = run_builtin(cmd, sh);
+		sh->last_exit_status = status;
+		restore_fds(save_in, save_out);
+	}
 	return (status);
 }
 
-static int	execute_pipeline(t_cmd *cmd, t_shell *sh)
+int	execute_pipeline(t_cmd *cmd, t_shell *sh)
 {
 	int		in;
 	pid_t	last_pid;
@@ -86,25 +90,22 @@ static int	execute_pipeline(t_cmd *cmd, t_shell *sh)
 
 int	execute(t_cmd *cmd, t_shell *sh)
 {
+	int	result;
+
 	if (!cmd)
 	{
 		sh->last_exit_status = 0;
 		return (0);
 	}
-	if ((!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0') && !cmd->redir)
-	{
-		if (cmd->args && cmd->args[0] && cmd->args[0][0] == '\0')
-			sh->last_exit_status = 127;
-		else
-			sh->last_exit_status = 0;
-		return (0);
-	}
-	if ((!cmd->args || !cmd->args[0] || cmd->args[0][0] == '\0') && cmd->redir)
-	{
-		return (execute_pipeline(cmd, sh));
-	}
+	result = handle_empty_cmd(cmd, sh);
+	if (result != -1)
+		return (result);
 	if (cmd && !cmd->next && cmd->args && cmd->args[0]
 		&& is_builtin(cmd->args[0]))
+	{
+		if (!ft_strncmp(cmd->args[0], "exit", 5))
+			return (handle_exit_builtin(cmd, sh));
 		return (exec_single_builtin(cmd, sh));
+	}
 	return (execute_pipeline(cmd, sh));
 }
