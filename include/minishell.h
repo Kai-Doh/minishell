@@ -51,14 +51,6 @@
 /*                              Structure & Enum                              */
 /* ************************************************************************** */
 
-typedef struct s_shell
-{
-	char	**env;
-	int		last_exit_status;
-	int		*heredoc_fds;
-	int		heredoc_count;
-}	t_shell;
-
 typedef struct s_quote_state
 {
 	int	in_single;
@@ -105,6 +97,17 @@ typedef struct s_cmd
 	t_redir			*redir;
 	struct s_cmd	*next;
 }	t_cmd;
+
+typedef struct s_shell
+{
+	char	**env;
+	int		last_exit_status;
+	int		*heredoc_fds;
+	int		heredoc_count;
+	int		should_exit;
+	t_cmd	*all_cmds;
+	t_token	*all_tokens;
+}	t_shell;
 
 /* ************************************************************************** */
 /*                              Prompt + Boucle                               */
@@ -159,19 +162,19 @@ void	close_heredoc_fds(t_redir *redir);
 void	add_heredoc_fd(t_shell *sh, int fd);
 void	close_all_heredoc_fds(t_shell *sh);
 void	close_unused_global_heredocs(t_shell *sh, t_redir *keep_redir);
+void	mark_heredoc_closed(t_shell *sh, int fd);
 void	init_heredoc_tracking(t_shell *sh);
 void	cleanup_heredoc_tracking(t_shell *sh);
-void	close_all_fds(void);
 
 /* ************************************************************************** */
 /*                                 Redirections                               */
 /* ************************************************************************** */
 
-int		handle_redir(t_redir *r);
+int		handle_redir(t_redir *r, t_shell *sh);
 int		do_redir_in(t_redir *r);
 int		do_redir_out(t_redir *r);
 int		do_redir_append(t_redir *r);
-void	do_heredoc(t_redir *r);
+void	do_heredoc(t_redir *r, t_shell *sh);
 
 /* ************************************************************************** */
 /*                                   HEREDOC                                  */
@@ -213,6 +216,8 @@ int		ft_pwd(void);
 int		ft_cd(char **args, t_shell *sh);
 int		ft_echo(char **args);
 int		ft_exit(char **args, t_shell *sh);
+void	cleanup_all_fds(void);
+void	cleanup_and_exit_child(t_shell *sh, t_cmd *cmds, t_token *tokens, int exit_code);
 int		ft_env(char **env);
 int		ft_export(char **args, t_shell *sh);
 int		ft_unset(char **args, t_shell *sh);

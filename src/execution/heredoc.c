@@ -45,7 +45,7 @@ static void	heredoc_child(char *delimiter, int write_fd)
 	signal(SIGQUIT, SIG_IGN);
 	write_to_pipe(write_fd, delimiter);
 	close(write_fd);
-	exit(0);
+	cleanup_and_exit_child(NULL, NULL, NULL, 0);
 }
 
 static pid_t	fork_heredoc(char *delimiter, int fd[2])

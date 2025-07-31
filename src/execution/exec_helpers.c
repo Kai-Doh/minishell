@@ -14,10 +14,16 @@
 
 void	restore_fds(int save_in, int save_out)
 {
-	dup2(save_in, STDIN_FILENO);
-	dup2(save_out, STDOUT_FILENO);
-	close(save_in);
-	close(save_out);
+	if (save_in >= 0)
+	{
+		dup2(save_in, STDIN_FILENO);
+		close(save_in);
+	}
+	if (save_out >= 0)
+	{
+		dup2(save_out, STDOUT_FILENO);
+		close(save_out);
+	}
 }
 
 int	handle_empty_cmd(t_cmd *cmd, t_shell *sh)
@@ -37,7 +43,7 @@ int	handle_empty_cmd(t_cmd *cmd, t_shell *sh)
 
 int	handle_exit_builtin(t_cmd *cmd, t_shell *sh)
 {
-	if (handle_redir(cmd->redir) != 0)
+	if (handle_redir(cmd->redir, sh) != 0)
 		sh->last_exit_status = 1;
 	else
 		sh->last_exit_status = run_builtin(cmd, sh);

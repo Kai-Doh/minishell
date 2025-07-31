@@ -56,16 +56,48 @@ static int	is_numeric(char *str)
 	return (is_valid_long(str));
 }
 
-static void	cleanup_all_fds(void)
+void	cleanup_all_fds(void)
 {
 	int	fd;
+	int	dup_fd;
 
 	fd = 3;
 	while (fd < 1024)
 	{
-		close(fd);
+		dup_fd = dup(fd);
+		if (dup_fd != -1)
+		{
+			close(dup_fd);
+			close(fd);
+		}
 		fd++;
 	}
+}
+
+void	cleanup_and_exit_child(t_shell *sh, t_cmd *cmds, t_token *tokens, int exit_code)
+{
+	(void)cmds;
+	(void)tokens;
+	if (sh)
+	{
+		if (sh->all_tokens)
+			free_tokens(sh->all_tokens);
+		if (sh->all_cmds)
+			free_cmds(sh->all_cmds);
+		if (sh->env)
+		{
+			ft_free_split(sh->env);
+			sh->env = NULL;
+		}
+		if (sh->heredoc_fds)
+		{
+			cleanup_heredoc_tracking(sh);
+		}
+	}
+	clear_history();
+	rl_clear_history();
+	cleanup_all_fds();
+	exit(exit_code);
 }
 
 int	ft_exit(char **args, t_shell *sh)
@@ -78,9 +110,9 @@ int	ft_exit(char **args, t_shell *sh)
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
-		cleanup_all_fds();
-		ft_free_split(sh->env);
-		exit(2);
+		sh->last_exit_status = 2;
+		sh->should_exit = 1;
+		return (2);
 	}
 	if (args[1] && args[2])
 	{
@@ -91,7 +123,7 @@ int	ft_exit(char **args, t_shell *sh)
 		code = ft_atoi(args[1]);
 	else
 		code = sh->last_exit_status;
-	cleanup_all_fds();
-	ft_free_split(sh->env);
-	exit(code);
+	sh->last_exit_status = code;
+	sh->should_exit = 1;
+	return (code);
 }

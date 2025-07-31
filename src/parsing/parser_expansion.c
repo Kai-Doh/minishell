@@ -12,34 +12,6 @@
 
 #include "minishell.h"
 
-void	handle_dollar_expand(char **res, char *s, size_t *i, t_shell *sh)
-{
-	char	*tmp;
-	char	*name;
-	size_t	start;
-
-	tmp = NULL;
-	name = NULL;
-	start = 0;
-	if (s[*i + 1] == '?')
-	{
-		tmp = ft_itoa(sh->last_exit_status);
-		*res = append_str(*res, tmp);
-		free(tmp);
-		*i += 2;
-	}
-	else if (ft_isalpha(s[*i + 1]) || s[*i + 1] == '_')
-	{
-		(*i)++;
-		start = *i;
-		while (ft_isalnum(s[*i]) || s[*i] == '_')
-			(*i)++;
-		name = ft_substr(s, start, *i - start);
-		*res = append_str(*res, get_env_value(name, sh));
-		free(name);
-	}
-}
-
 static void	handle_escape_chars(char **res, char *s, size_t *i, int in_d)
 {
 	if (s[*i] == '\\' && in_d && s[*i + 1] == '"')

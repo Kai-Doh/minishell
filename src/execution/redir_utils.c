@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	handle_redir(t_redir *r)
+int	handle_redir(t_redir *r, t_shell *sh)
 {
 	while (r)
 	{
@@ -32,7 +32,7 @@ int	handle_redir(t_redir *r)
 				return (1);
 		}
 		else if (r->type == HEREDOC)
-			do_heredoc(r);
+			do_heredoc(r, sh);
 		r = r->next;
 	}
 	return (0);
@@ -89,13 +89,13 @@ int	do_redir_append(t_redir *r)
 	return (0);
 }
 
-void	do_heredoc(t_redir *r)
+void	do_heredoc(t_redir *r, t_shell *sh)
 {
 	if (r->heredoc_fd >= 0)
 	{
-		fcntl(r->heredoc_fd, F_SETFD, 0);
 		dup2(r->heredoc_fd, STDIN_FILENO);
 		close(r->heredoc_fd);
+		mark_heredoc_closed(sh, r->heredoc_fd);
 		r->heredoc_fd = -1;
 	}
 }

@@ -1,0 +1,132 @@
+{
+    readline_library_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    obj:*/libreadline.so.*
+}
+
+{
+    ncurses_library_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    obj:*/libncurses.so.*
+}
+
+{
+    ncurses_tinfo_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    obj:*/libtinfo.so.*
+}
+
+{
+    readline_xmalloc_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    fun:malloc
+    fun:xmalloc
+    ...
+}
+
+{
+    readline_xrealloc_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    fun:realloc
+    fun:xrealloc
+    ...
+}
+
+{
+    ncurses_tputstr_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:tputstr*
+    ...
+}
+
+{
+    ncurses_tgoto_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:tgoto*
+    ...
+}
+
+{
+    ncurses_tgetent_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:tgetent*
+    ...
+}
+
+{
+    ncurses_tgetstr_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:tgetstr*
+    ...
+}
+
+{
+    ncurses_tgetnum_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:tgetnum*
+    ...
+}
+
+{
+    ncurses_tgetflag_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:tgetflag*
+    ...
+}
+
+{
+    ncurses_setupterm_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:*setupterm*
+    ...
+}
+
+{
+    ncurses_terminfo_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:*terminfo*
+    ...
+}
+
+{
+    ncurses_tiparm_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:*tiparm*
+    ...
+}
+
+{
+    ncurses_tparm_reachable
+    Memcheck:Leak
+    match-leak-kinds: reachable
+    ...
+    fun:*tparm*
+    ...
+}
+

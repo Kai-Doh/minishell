@@ -12,9 +12,23 @@
 
 #include "minishell.h"
 
-static void	update_env_var(t_shell *sh, const char *key, const char *val)
+static void	update_env_var_if_exists(t_shell *sh, const char *key, const char *val)
 {
-	set_env_var(sh, key, val);
+	int		i;
+	size_t	key_len;
+
+	key_len = ft_strlen(key);
+	i = 0;
+	while (sh->env && sh->env[i])
+	{
+		if (!ft_strncmp(sh->env[i], key, key_len)
+			&& sh->env[i][key_len] == '=')
+		{
+			set_env_var(sh, key, val);
+			return ;
+		}
+		i++;
+	}
 }
 
 int	cd_validate_args(char **args)
@@ -29,6 +43,6 @@ int	cd_validate_args(char **args)
 
 void	update_pwd_vars(t_shell *sh, char *old, char *cwd)
 {
-	update_env_var(sh, "OLDPWD", old);
-	update_env_var(sh, "PWD", cwd);
+	update_env_var_if_exists(sh, "OLDPWD", old);
+	update_env_var_if_exists(sh, "PWD", cwd);
 }

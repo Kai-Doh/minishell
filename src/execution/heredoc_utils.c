@@ -70,7 +70,26 @@ void	close_unused_global_heredocs(t_shell *sh, t_redir *keep_redir)
 			redir = redir->next;
 		}
 		if (!keep_fd && sh->heredoc_fds[i] >= 0)
+		{
 			close(sh->heredoc_fds[i]);
+			sh->heredoc_fds[i] = -1;
+		}
+		i++;
+	}
+}
+
+void	mark_heredoc_closed(t_shell *sh, int fd)
+{
+	int	i;
+
+	i = 0;
+	while (i < sh->heredoc_count)
+	{
+		if (sh->heredoc_fds[i] == fd)
+		{
+			sh->heredoc_fds[i] = -1;
+			return ;
+		}
 		i++;
 	}
 }
@@ -82,14 +101,3 @@ void	cleanup_heredoc_tracking(t_shell *sh)
 	sh->heredoc_count = 0;
 }
 
-void	close_all_fds(void)
-{
-	int	fd;
-
-	fd = 3;
-	while (fd < 1024)
-	{
-		close(fd);
-		fd++;
-	}
-}

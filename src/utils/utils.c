@@ -19,9 +19,7 @@ void	exit_msg(char *msg, int code, t_shell *sh)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putendl_fd(msg, 2);
 	}
-	if (sh && sh->env)
-		ft_free_split(sh->env);
-	exit(code);
+	cleanup_and_exit_child(sh, NULL, NULL, code);
 }
 
 void	free_tokens(t_token *tok)

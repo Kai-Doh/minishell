@@ -10,8 +10,8 @@ NAME   = minishell
 
 # Compiler / flags
 CC      = gcc
-CFLAGS  = -Wall -Wextra -Werror -g -Iinclude -ILibft
-LDLIBS  = -lreadline -lhistory -lncurses
+CFLAGS  = -Wall -Wextra -Werror -g -Iinclude -ILibft #-fsanitize=address
+LDLIBS  = -lreadline -lhistory -lncurses #-fsanitize=address
 
 # Directories
 SRCDIR   = src

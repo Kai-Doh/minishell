@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char	*get_cmd_path(t_cmd *cmd, char **env)
+static char	*get_cmd_path(t_cmd *cmd, t_shell *sh)
 {
 	char	*path;
 
@@ -20,42 +20,55 @@ static char	*get_cmd_path(t_cmd *cmd, char **env)
 		path = handle_path_cmd(cmd->args[0]);
 	else
 	{
-		path = handle_local_cmd(cmd->args[0], env);
+		path = handle_local_cmd(cmd->args[0], sh->env);
 		if (!path)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd->args[0], 2);
 			ft_putendl_fd(": command not found", 2);
-			exit(127);
+			cleanup_and_exit_child(sh, NULL, NULL, 127);
 		}
 	}
 	return (path);
 }
 
-static void	exec_cmd(t_cmd *cmd, char **env)
+static void	exec_cmd(t_cmd *cmd, t_shell *sh)
 {
 	char	*path;
 
 	if (!cmd->args || !cmd->args[0])
-		exit(0);
+		cleanup_and_exit_child(sh, NULL, NULL, 0);
 	if (cmd->args[0][0] == '\0')
 	{
 		ft_putendl_fd("minishell: : command not found", 2);
-		exit(127);
+		cleanup_and_exit_child(sh, NULL, NULL, 127);
 	}
-	path = get_cmd_path(cmd, env);
-	execve(path, cmd->args, env);
+	path = get_cmd_path(cmd, sh);
+	if (sh && sh->all_tokens)
+	{
+		free_tokens(sh->all_tokens);
+		sh->all_tokens = NULL;
+	}
+	if (sh && sh->all_cmds)
+	{
+		free_cmds(sh->all_cmds);
+		sh->all_cmds = NULL;
+	}
+	clear_history();
+	rl_clear_history();
+	cleanup_all_fds();
+	execve(path, cmd->args, sh->env);
 	if (errno == ENOEXEC || errno == EACCES)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(path, 2);
 		ft_putendl_fd(": command not found", 2);
 		free(path);
-		exit(127);
+		cleanup_and_exit_child(sh, NULL, NULL, 127);
 	}
 	perror(path);
 	free(path);
-	exit(126);
+	cleanup_and_exit_child(sh, NULL, NULL, 126);
 }
 
 static void	child_process(t_cmd *cmd, t_shell *sh, int in, int out)
@@ -70,19 +83,17 @@ static void	child_process(t_cmd *cmd, t_shell *sh, int in, int out)
 		dup2(out, STDOUT_FILENO);
 		close(out);
 	}
-	if (handle_redir(cmd->redir) != 0)
-		exit(1);
-	close_all_fds();
+	if (handle_redir(cmd->redir, sh) != 0)
+		cleanup_and_exit_child(sh, NULL, NULL, 1);
 	if (is_builtin(cmd->args[0]))
-		exit(run_builtin(cmd, sh));
-	exec_cmd(cmd, sh->env);
+		cleanup_and_exit_child(sh, NULL, NULL, run_builtin(cmd, sh));
+	exec_cmd(cmd, sh);
 }
 
 static void	close_and_update(int *in, t_cmd *cmd, int fd[2])
 {
 	if (*in != STDIN_FILENO)
 		close(*in);
-	close_heredoc_fds(cmd->redir);
 	if (cmd->next)
 	{
 		close(fd[1]);

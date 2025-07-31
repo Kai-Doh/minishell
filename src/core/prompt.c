@@ -68,13 +68,24 @@ static int	handle_input(char *rl, t_shell *sh)
 	if (!cmds)
 	{
 		free_tokens(tokens);
+		cleanup_heredoc_tracking(sh);
+		init_heredoc_tracking(sh);
 		if (sh->last_exit_status == 2)
 			return (0);
 		return (0);
 	}
+	sh->all_tokens = tokens;
+	sh->all_cmds = cmds;
 	execute(cmds, sh);
+	sh->all_tokens = NULL;
+	sh->all_cmds = NULL;
 	free_tokens(tokens);
 	free_cmds(cmds);
+	close_all_heredoc_fds(sh);
+	cleanup_heredoc_tracking(sh);
+	init_heredoc_tracking(sh);
+	if (sh->should_exit)
+		return (1);
 	return (0);
 }
 
