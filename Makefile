@@ -26,7 +26,7 @@ BUILTIN_SRCS = $(SRCDIR)/builtin/dispatcher.c $(SRCDIR)/builtin/echo.c $(SRCDIR)
 
 PARSING_SRCS = $(SRCDIR)/parsing/lexer.c $(SRCDIR)/parsing/lexer_token.c $(SRCDIR)/parsing/lexer_utils.c $(SRCDIR)/parsing/parser.c $(SRCDIR)/parsing/parser_cmd.c $(SRCDIR)/parsing/parser_redir.c $(SRCDIR)/parsing/parser_utils.c $(SRCDIR)/parsing/parser_expansion.c $(SRCDIR)/parsing/parser_helpers.c $(SRCDIR)/parsing/syntax_validation.c
 
-EXECUTION_SRCS = $(SRCDIR)/execution/exec.c $(SRCDIR)/execution/exec_utils.c $(SRCDIR)/execution/exec_helpers.c $(SRCDIR)/execution/path.c $(SRCDIR)/execution/redir_utils.c $(SRCDIR)/execution/heredoc.c $(SRCDIR)/execution/process_wait.c
+EXECUTION_SRCS = $(SRCDIR)/execution/exec.c $(SRCDIR)/execution/exec_utils.c $(SRCDIR)/execution/exec_helpers.c $(SRCDIR)/execution/path.c $(SRCDIR)/execution/redir_utils.c $(SRCDIR)/execution/heredoc.c $(SRCDIR)/execution/heredoc_utils.c $(SRCDIR)/execution/process_wait.c
 
 UTILS_SRCS = $(SRCDIR)/utils/utils.c $(SRCDIR)/utils/path_utils.c $(SRCDIR)/utils/free_cmds.c $(SRCDIR)/utils/input_utils.c $(SRCDIR)/utils/variable_assignment.c $(SRCDIR)/utils/shlvl_utils.c $(SRCDIR)/utils/string_utils.c $(SRCDIR)/utils/wildcard_expansion.c
 

@@ -57,6 +57,7 @@ static int	exec_single_builtin(t_cmd *cmd, t_shell *sh)
 		sh->last_exit_status = 1;
 		return (1);
 	}
+	close_all_heredoc_fds(sh);
 	if (cmd->args[0] && !ft_strncmp(cmd->args[0], "exit", 5))
 	{
 		restore_fds(save_in, save_out);
@@ -84,7 +85,15 @@ int	execute_pipeline(t_cmd *cmd, t_shell *sh)
 		last_pid = pipe_and_fork(current, sh, &in);
 		current = current->next;
 	}
+	current = cmd;
+	while (current)
+	{
+		close_heredoc_fds(current->redir);
+		current = current->next;
+	}
 	wait_all(last_pid, sh);
+	cleanup_heredoc_tracking(sh);
+	init_heredoc_tracking(sh);
 	return (sh->last_exit_status);
 }
 
@@ -104,8 +113,12 @@ int	execute(t_cmd *cmd, t_shell *sh)
 		&& is_builtin(cmd->args[0]))
 	{
 		if (!ft_strncmp(cmd->args[0], "exit", 5))
-			return (handle_exit_builtin(cmd, sh));
-		return (exec_single_builtin(cmd, sh));
+			result = handle_exit_builtin(cmd, sh);
+		else
+			result = exec_single_builtin(cmd, sh);
+		cleanup_heredoc_tracking(sh);
+		init_heredoc_tracking(sh);
+		return (result);
 	}
 	return (execute_pipeline(cmd, sh));
 }

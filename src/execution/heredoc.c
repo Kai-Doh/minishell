@@ -82,5 +82,6 @@ int	create_heredoc(char *delimiter)
 		close(fd[0]);
 		return (-1);
 	}
+	fcntl(fd[0], F_SETFD, FD_CLOEXEC);
 	return (fd[0]);
 }

@@ -72,6 +72,7 @@ static void	child_process(t_cmd *cmd, t_shell *sh, int in, int out)
 	}
 	if (handle_redir(cmd->redir) != 0)
 		exit(1);
+	close_all_fds();
 	if (is_builtin(cmd->args[0]))
 		exit(run_builtin(cmd, sh));
 	exec_cmd(cmd, sh->env);
@@ -81,6 +82,7 @@ static void	close_and_update(int *in, t_cmd *cmd, int fd[2])
 {
 	if (*in != STDIN_FILENO)
 		close(*in);
+	close_heredoc_fds(cmd->redir);
 	if (cmd->next)
 	{
 		close(fd[1]);

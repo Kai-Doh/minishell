@@ -30,7 +30,11 @@ t_redir	*add_redir(t_token **tok, t_shell *sh)
 	}
 	r->file = expand_word((*tok)->content, sh);
 	if (r->type == HEREDOC)
+	{
 		r->heredoc_fd = create_heredoc(r->file);
+		if (r->heredoc_fd >= 0)
+			add_heredoc_fd(sh, r->heredoc_fd);
+	}
 	r->next = NULL;
 	*tok = (*tok)->next;
 	return (r);

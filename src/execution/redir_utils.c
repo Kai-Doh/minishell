@@ -93,7 +93,9 @@ void	do_heredoc(t_redir *r)
 {
 	if (r->heredoc_fd >= 0)
 	{
+		fcntl(r->heredoc_fd, F_SETFD, 0);
 		dup2(r->heredoc_fd, STDIN_FILENO);
 		close(r->heredoc_fd);
+		r->heredoc_fd = -1;
 	}
 }

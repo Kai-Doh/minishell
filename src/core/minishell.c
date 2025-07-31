@@ -24,8 +24,10 @@ int	main(int argc, char **argv, char **env)
 		exit_msg("Memory allocation failed", 1, NULL);
 	increment_shlvl(&sh);
 	sh.last_exit_status = 0;
+	init_heredoc_tracking(&sh);
 	setup_signals();
 	start_shell_loop(&sh);
+	cleanup_heredoc_tracking(&sh);
 	ft_free_split(sh.env);
 	clear_history();
 	return (sh.last_exit_status);

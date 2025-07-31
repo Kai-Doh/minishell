@@ -43,3 +43,22 @@ int	handle_exit_builtin(t_cmd *cmd, t_shell *sh)
 		sh->last_exit_status = run_builtin(cmd, sh);
 	return (sh->last_exit_status);
 }
+
+void	close_heredoc_fds(t_redir *redir)
+{
+	while (redir)
+	{
+		if (redir->type == HEREDOC && redir->heredoc_fd >= 0)
+		{
+			close(redir->heredoc_fd);
+			redir->heredoc_fd = -1;
+		}
+		redir = redir->next;
+	}
+}
+
+void	init_heredoc_tracking(t_shell *sh)
+{
+	sh->heredoc_fds = NULL;
+	sh->heredoc_count = 0;
+}

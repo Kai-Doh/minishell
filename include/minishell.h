@@ -55,6 +55,8 @@ typedef struct s_shell
 {
 	char	**env;
 	int		last_exit_status;
+	int		*heredoc_fds;
+	int		heredoc_count;
 }	t_shell;
 
 typedef struct s_quote_state
@@ -153,6 +155,13 @@ void	wait_all(pid_t last_pid, t_shell *sh);
 void	restore_fds(int save_in, int save_out);
 int		handle_empty_cmd(t_cmd *cmd, t_shell *sh);
 int		handle_exit_builtin(t_cmd *cmd, t_shell *sh);
+void	close_heredoc_fds(t_redir *redir);
+void	add_heredoc_fd(t_shell *sh, int fd);
+void	close_all_heredoc_fds(t_shell *sh);
+void	close_unused_global_heredocs(t_shell *sh, t_redir *keep_redir);
+void	init_heredoc_tracking(t_shell *sh);
+void	cleanup_heredoc_tracking(t_shell *sh);
+void	close_all_fds(void);
 
 /* ************************************************************************** */
 /*                                 Redirections                               */
