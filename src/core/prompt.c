@@ -52,10 +52,8 @@ static int	process_input(char *rl, t_shell *sh)
 {
 	t_token	*tokens;
 	t_cmd	*cmds;
-	int		err;
 
 	tokens = NULL;
-	err = 0;
 	if (process_parsing(rl, sh, &tokens) != -1)
 		return (0);
 	sh->all_tokens = tokens;
