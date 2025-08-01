@@ -48,7 +48,7 @@ void	start_shell_loop(t_shell *sh)
 		;
 }
 
-static int	handle_input(char *rl, t_shell *sh)
+static int	process_input(char *rl, t_shell *sh)
 {
 	t_token	*tokens;
 	t_cmd	*cmds;
@@ -56,37 +56,24 @@ static int	handle_input(char *rl, t_shell *sh)
 
 	tokens = NULL;
 	err = 0;
-	if (!rl || rl[0] == '\0')
+	if (process_parsing(rl, sh, &tokens) != -1)
 		return (0);
-	add_history(rl);
-	rl = strip_comments(rl);
-	tokens = lexer(rl, &err);
-	if (!tokens)
-		return (lexer_fail(err, sh));
 	sh->all_tokens = tokens;
 	cmds = parse(tokens, sh);
 	sh->all_cmds = cmds;
 	if (!cmds)
 	{
-		free_tokens(sh->all_tokens);
-		sh->all_tokens = NULL;
-		sh->all_cmds = NULL;
-		cleanup_heredoc_tracking(sh);
-		init_heredoc_tracking(sh);
-		if (sh->last_exit_status == 2)
-			return (0);
+		cleanup_failed_parsing(sh);
 		return (0);
 	}
 	execute(cmds, sh);
-	free_tokens(sh->all_tokens);
-	free_cmds(sh->all_cmds);
-	sh->all_tokens = NULL;
-	sh->all_cmds = NULL;
-	close_all_heredoc_fds(sh);
-	cleanup_heredoc_tracking(sh);
-	init_heredoc_tracking(sh);
+	cleanup_after_command(sh);
 	if (sh->should_exit)
 		return (1);
 	return (0);
 }
 
+static int	handle_input(char *rl, t_shell *sh)
+{
+	return (process_input(rl, sh));
+}

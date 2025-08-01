@@ -35,7 +35,6 @@ void	free_tokens(t_token *tok)
 	}
 }
 
-
 char	*strip_comments(char *line)
 {
 	int	i;

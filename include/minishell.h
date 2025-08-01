@@ -220,7 +220,8 @@ int		ft_cd(char **args, t_shell *sh);
 int		ft_echo(char **args);
 int		ft_exit(char **args, t_shell *sh);
 void	cleanup_all_fds(void);
-void	cleanup_and_exit_child(t_shell *sh, t_cmd *cmds, t_token *tokens, int exit_code);
+void	cleanup_and_exit_child(t_shell *sh, t_cmd *cmds, t_token *tokens,
+			int exit_code);
 int		ft_env(char **env);
 int		ft_export(char **args, t_shell *sh);
 int		ft_unset(char **args, t_shell *sh);
@@ -246,5 +247,10 @@ void	process_quote_state(char c, int *in_s, int *in_d);
 void	process_expansion_logic(char **res, char *s, size_t *i, t_shell *sh);
 int		cd_validate_args(char **args);
 void	update_pwd_vars(t_shell *sh, char *old, char *cwd);
+int		process_parsing(char *rl, t_shell *sh, t_token **tokens);
+void	cleanup_after_execution(t_shell *sh);
+void	cleanup_failed_parsing(t_shell *sh);
+void	cleanup_after_command(t_shell *sh);
+void	cleanup_shell_resources(t_shell *sh);
 
 #endif

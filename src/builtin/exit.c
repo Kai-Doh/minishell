@@ -74,34 +74,15 @@ void	cleanup_all_fds(void)
 	}
 }
 
-void	cleanup_and_exit_child(t_shell *sh, t_cmd *cmds, t_token *tokens, int exit_code)
+void	cleanup_and_exit_child(t_shell *sh, t_cmd *cmds, t_token *tokens,
+		int exit_code)
 {
 	if (cmds)
 		free_cmds(cmds);
 	if (tokens)
 		free_tokens(tokens);
 	if (sh)
-	{
-		if (sh->all_tokens)
-		{
-			free_tokens(sh->all_tokens);
-			sh->all_tokens = NULL;
-		}
-		if (sh->all_cmds)
-		{
-			free_cmds(sh->all_cmds);
-			sh->all_cmds = NULL;
-		}
-		if (sh->env)
-		{
-			ft_free_split(sh->env);
-			sh->env = NULL;
-		}
-		if (sh->heredoc_fds)
-		{
-			cleanup_heredoc_tracking(sh);
-		}
-	}
+		cleanup_shell_resources(sh);
 	clear_history();
 	rl_clear_history();
 	cleanup_all_fds();

@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-static void	update_env_var_if_exists(t_shell *sh, const char *key, const char *val)
+static void	update_env_var_if_exists(t_shell *sh, const char *key,
+		const char *val)
 {
 	int		i;
 	size_t	key_len;

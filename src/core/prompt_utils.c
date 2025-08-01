@@ -36,6 +36,23 @@ char	*get_short_pwd(void)
 	return (cwd);
 }
 
+static size_t	calculate_prompt_len(char *username, char *cwd)
+{
+	return (ft_strlen(GREEN "👾 Minishell" YELLOW "@") + ft_strlen(username)
+		+ ft_strlen(BLUE ":") + ft_strlen(cwd)
+		+ ft_strlen(GREEN " ➜ " RESET) + 1);
+}
+
+static void	build_prompt_string(char *result, char *username, char *cwd,
+			size_t total_len)
+{
+	ft_strlcpy(result, GREEN "👾 Minishell" YELLOW "@", total_len);
+	ft_strlcat(result, username, total_len);
+	ft_strlcat(result, BLUE ":", total_len);
+	ft_strlcat(result, cwd, total_len);
+	ft_strlcat(result, GREEN " ➜ " RESET, total_len);
+}
+
 char	*build_prompt(void)
 {
 	char	*username;
@@ -51,16 +68,11 @@ char	*build_prompt(void)
 	cwd = get_short_pwd();
 	if (!cwd)
 		return (NULL);
-	total_len = ft_strlen(GREEN "👾 Minishell" YELLOW "@") + ft_strlen(username)
-		+ ft_strlen(BLUE ":") + ft_strlen(cwd) + ft_strlen(GREEN " ➜ " RESET) + 1;
+	total_len = calculate_prompt_len(username, cwd);
 	result = malloc(total_len);
 	if (!result)
 		return (free(cwd), NULL);
-	ft_strlcpy(result, GREEN "👾 Minishell" YELLOW "@", total_len);
-	ft_strlcat(result, username, total_len);
-	ft_strlcat(result, BLUE ":", total_len);
-	ft_strlcat(result, cwd, total_len);
-	ft_strlcat(result, GREEN " ➜ " RESET, total_len);
+	build_prompt_string(result, username, cwd, total_len);
 	free(cwd);
 	return (result);
 }

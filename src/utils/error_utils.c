@@ -42,6 +42,8 @@ void	print_syntax_error(const char *token)
 	if (token)
 		ft_putstr_fd((char *)token, 2);
 	else
+	{
 		ft_putstr_fd("newline", 2);
+	}
 	ft_putchar_fd('\n', 2);
 }

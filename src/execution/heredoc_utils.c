@@ -48,28 +48,29 @@ void	close_all_heredoc_fds(t_shell *sh)
 	}
 }
 
+static int	should_keep_heredoc_fd(t_redir *keep_redir, int fd)
+{
+	t_redir	*redir;
+
+	redir = keep_redir;
+	while (redir)
+	{
+		if (redir->type == HEREDOC && redir->heredoc_fd == fd)
+			return (1);
+		redir = redir->next;
+	}
+	return (0);
+}
+
 void	close_unused_global_heredocs(t_shell *sh, t_redir *keep_redir)
 {
-	int		i;
-	t_redir	*redir;
-	int		keep_fd;
+	int	i;
 
 	i = 0;
 	while (i < sh->heredoc_count)
 	{
-		keep_fd = 0;
-		redir = keep_redir;
-		while (redir)
-		{
-			if (redir->type == HEREDOC
-				&& redir->heredoc_fd == sh->heredoc_fds[i])
-			{
-				keep_fd = 1;
-				break ;
-			}
-			redir = redir->next;
-		}
-		if (!keep_fd && sh->heredoc_fds[i] >= 0)
+		if (!should_keep_heredoc_fd(keep_redir, sh->heredoc_fds[i])
+			&& sh->heredoc_fds[i] >= 0)
 		{
 			close(sh->heredoc_fds[i]);
 			sh->heredoc_fds[i] = -1;
@@ -93,11 +94,3 @@ void	mark_heredoc_closed(t_shell *sh, int fd)
 		i++;
 	}
 }
-
-void	cleanup_heredoc_tracking(t_shell *sh)
-{
-	free(sh->heredoc_fds);
-	sh->heredoc_fds = NULL;
-	sh->heredoc_count = 0;
-}
-

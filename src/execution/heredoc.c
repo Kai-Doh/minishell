@@ -45,7 +45,14 @@ static void	heredoc_child(char *delimiter, int write_fd, t_shell *sh)
 	signal(SIGQUIT, SIG_IGN);
 	write_to_pipe(write_fd, delimiter);
 	close(write_fd);
-	cleanup_and_exit_child(sh, NULL, NULL, 0);
+	if (sh->env)
+		ft_free_split(sh->env);
+	sh->env = NULL;
+	sh->all_tokens = NULL;
+	sh->all_cmds = NULL;
+	cleanup_heredoc_tracking(sh);
+	cleanup_all_fds();
+	exit(0);
 }
 
 static pid_t	fork_heredoc(char *delimiter, int fd[2], t_shell *sh)
