@@ -223,6 +223,9 @@ void	cleanup_and_exit_child(t_shell *sh, t_cmd *cmds, t_token *tokens,
 			int exit_code);
 int		ft_env(char **env);
 int		ft_export(char **args, t_shell *sh);
+void	print_export_format(t_shell *sh);
+int		variable_exists(char *var, t_shell *sh);
+void	export_variable_without_value(char *var, t_shell *sh);
 int		ft_unset(char **args, t_shell *sh);
 char	**dup_env(char **env);
 void	update_env_from_system(t_shell *sh);

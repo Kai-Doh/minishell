@@ -84,9 +84,11 @@ int	ft_export(char **args, t_shell *sh)
 {
 	int	i;
 
-	(void)sh;
 	if (!args[1])
-		return (ft_env(sh->env));
+	{
+		print_export_format(sh);
+		return (0);
+	}
 	i = 1;
 	while (args[i])
 	{
@@ -99,6 +101,8 @@ int	ft_export(char **args, t_shell *sh)
 		}
 		if (ft_strchr(args[i], '='))
 			update_or_add(args[i], sh);
+		else
+			export_variable_without_value(args[i], sh);
 		i++;
 	}
 	return (0);

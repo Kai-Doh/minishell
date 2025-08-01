@@ -22,7 +22,7 @@ LIBFTDIR = Libft
 # Source files organized by category
 CORE_SRCS = $(SRCDIR)/core/minishell.c $(SRCDIR)/core/prompt.c $(SRCDIR)/core/prompt_utils.c $(SRCDIR)/core/prompt_helpers.c $(SRCDIR)/core/signals.c
 
-BUILTIN_SRCS = $(SRCDIR)/builtin/dispatcher.c $(SRCDIR)/builtin/echo.c $(SRCDIR)/builtin/pwd.c $(SRCDIR)/builtin/cd.c $(SRCDIR)/builtin/cd_helpers.c $(SRCDIR)/builtin/exit.c $(SRCDIR)/builtin/env.c $(SRCDIR)/builtin/env_operations.c $(SRCDIR)/builtin/env_core.c $(SRCDIR)/builtin/env_utils.c $(SRCDIR)/builtin/env_helpers.c $(SRCDIR)/builtin/env_extract.c $(SRCDIR)/builtin/env_setters.c $(SRCDIR)/builtin/export.c $(SRCDIR)/builtin/unset.c
+BUILTIN_SRCS = $(SRCDIR)/builtin/dispatcher.c $(SRCDIR)/builtin/echo.c $(SRCDIR)/builtin/pwd.c $(SRCDIR)/builtin/cd.c $(SRCDIR)/builtin/cd_helpers.c $(SRCDIR)/builtin/exit.c $(SRCDIR)/builtin/env.c $(SRCDIR)/builtin/env_operations.c $(SRCDIR)/builtin/env_core.c $(SRCDIR)/builtin/env_utils.c $(SRCDIR)/builtin/env_helpers.c $(SRCDIR)/builtin/env_extract.c $(SRCDIR)/builtin/env_setters.c $(SRCDIR)/builtin/export.c $(SRCDIR)/builtin/export_utils.c $(SRCDIR)/builtin/unset.c
 
 PARSING_SRCS = $(SRCDIR)/parsing/lexer.c $(SRCDIR)/parsing/lexer_token.c $(SRCDIR)/parsing/lexer_utils.c $(SRCDIR)/parsing/parser.c $(SRCDIR)/parsing/parser_cmd.c $(SRCDIR)/parsing/parser_redir.c $(SRCDIR)/parsing/parser_utils.c $(SRCDIR)/parsing/parser_expansion.c $(SRCDIR)/parsing/parser_helpers.c $(SRCDIR)/parsing/syntax_validation.c
 
