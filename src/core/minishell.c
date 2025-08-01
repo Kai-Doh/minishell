@@ -30,6 +30,10 @@ int	main(int argc, char **argv, char **env)
 	init_heredoc_tracking(&sh);
 	setup_signals();
 	start_shell_loop(&sh);
+	if (sh.all_tokens)
+		free_tokens(sh.all_tokens);
+	if (sh.all_cmds)
+		free_cmds(sh.all_cmds);
 	cleanup_heredoc_tracking(&sh);
 	cleanup_all_fds();
 	ft_free_split(sh.env);

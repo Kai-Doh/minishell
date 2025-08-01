@@ -180,7 +180,7 @@ void	do_heredoc(t_redir *r, t_shell *sh);
 /*                                   HEREDOC                                  */
 /* ************************************************************************** */
 
-int		create_heredoc(char *delimiter);
+int		create_heredoc(char *delimiter, t_shell *sh);
 
 /* ************************************************************************** */
 /*                                   PATH                                     */
@@ -198,6 +198,9 @@ void	ft_free_split(char **arr);
 void	exit_msg(char *msg, int code, t_shell *sh);
 void	free_tokens(t_token *tok);
 void	free_cmds(t_cmd *cmd);
+void	print_error(const char *cmd, const char *msg);
+void	print_command_error(const char *cmd, const char *arg, const char *msg);
+void	print_syntax_error(const char *token);
 
 /* ************************************************************************** */
 /*                                   SIGNALS                                  */
@@ -226,7 +229,9 @@ void	update_env_from_system(t_shell *sh);
 void	increment_shlvl(t_shell *sh);
 char	**ft_strs_add(char **env, char *new_entry);
 char	**ft_strs_remove(char **env, int index);
-char	**ft_args_add(char **arr, char *new_arg);
+int		find_env_var_index(char **env, const char *key, size_t key_len);
+void	set_env_var(t_shell *sh, const char *key, const char *value);
+void	process_append_assignment(char *arg, t_shell *sh, char *sep);
 char	*strip_comments(char *line);
 char	*get_short_pwd(void);
 char	*build_prompt(void);

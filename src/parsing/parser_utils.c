@@ -72,7 +72,8 @@ int	handle_word_token(t_cmd *cmd, t_token **tok, t_shell *sh)
 	}
 	else if (arg && (arg[0] != '\0' || had_quotes))
 	{
-		cmd->args = ft_args_add(cmd->args, arg);
+		cmd->args = ft_strs_add(cmd->args, arg);
+		free(arg);
 		if (!cmd->args)
 			return (1);
 	}

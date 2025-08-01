@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-static char	*prompt(void);
 static int	handle_input(char *rl, t_shell *sh);
 
 static int	handle_readline_result(char *line, t_shell *sh)
@@ -35,7 +34,7 @@ static int	shell_iteration(t_shell *sh)
 	char	*line;
 	char	*prompt_str;
 
-	prompt_str = prompt();
+	prompt_str = build_prompt();
 	if (!prompt_str)
 		return (1);
 	line = safe_readline(prompt_str);
@@ -64,23 +63,25 @@ static int	handle_input(char *rl, t_shell *sh)
 	tokens = lexer(rl, &err);
 	if (!tokens)
 		return (lexer_fail(err, sh));
+	sh->all_tokens = tokens;
 	cmds = parse(tokens, sh);
+	sh->all_cmds = cmds;
 	if (!cmds)
 	{
-		free_tokens(tokens);
+		free_tokens(sh->all_tokens);
+		sh->all_tokens = NULL;
+		sh->all_cmds = NULL;
 		cleanup_heredoc_tracking(sh);
 		init_heredoc_tracking(sh);
 		if (sh->last_exit_status == 2)
 			return (0);
 		return (0);
 	}
-	sh->all_tokens = tokens;
-	sh->all_cmds = cmds;
 	execute(cmds, sh);
+	free_tokens(sh->all_tokens);
+	free_cmds(sh->all_cmds);
 	sh->all_tokens = NULL;
 	sh->all_cmds = NULL;
-	free_tokens(tokens);
-	free_cmds(cmds);
 	close_all_heredoc_fds(sh);
 	cleanup_heredoc_tracking(sh);
 	init_heredoc_tracking(sh);
@@ -89,7 +90,3 @@ static int	handle_input(char *rl, t_shell *sh)
 	return (0);
 }
 
-static char	*prompt(void)
-{
-	return (build_prompt());
-}

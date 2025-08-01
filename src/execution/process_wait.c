@@ -52,6 +52,7 @@ void	wait_all(pid_t last_pid, t_shell *sh)
 	int	last_status;
 
 	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	last_status = wait_for_processes(last_pid);
 	setup_signals();
 	handle_process_exit(last_status, sh);

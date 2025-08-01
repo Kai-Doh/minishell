@@ -36,38 +36,12 @@ char	*get_short_pwd(void)
 	return (cwd);
 }
 
-static char	*build_prompt_part1(char *username)
-{
-	char	*temp;
-	char	*result;
-
-	temp = ft_strjoin(GREEN "👾 Minishell" YELLOW "@", username);
-	if (!temp)
-		return (NULL);
-	result = ft_strjoin(temp, BLUE ":");
-	free(temp);
-	return (result);
-}
-
-static char	*build_prompt_part2(char *part1, char *cwd)
-{
-	char	*temp;
-	char	*result;
-
-	temp = ft_strjoin(part1, cwd);
-	if (!temp)
-		return (NULL);
-	result = ft_strjoin(temp, GREEN " ➜ " RESET);
-	free(temp);
-	return (result);
-}
-
 char	*build_prompt(void)
 {
 	char	*username;
 	char	*cwd;
-	char	*part1;
 	char	*result;
+	size_t	total_len;
 
 	if (!isatty(STDIN_FILENO))
 		return (ft_strdup("__MINISHELL_PROMPT__ "));
@@ -77,11 +51,16 @@ char	*build_prompt(void)
 	cwd = get_short_pwd();
 	if (!cwd)
 		return (NULL);
-	part1 = build_prompt_part1(username);
-	if (!part1)
+	total_len = ft_strlen(GREEN "👾 Minishell" YELLOW "@") + ft_strlen(username)
+		+ ft_strlen(BLUE ":") + ft_strlen(cwd) + ft_strlen(GREEN " ➜ " RESET) + 1;
+	result = malloc(total_len);
+	if (!result)
 		return (free(cwd), NULL);
-	result = build_prompt_part2(part1, cwd);
-	free(part1);
+	ft_strlcpy(result, GREEN "👾 Minishell" YELLOW "@", total_len);
+	ft_strlcat(result, username, total_len);
+	ft_strlcat(result, BLUE ":", total_len);
+	ft_strlcat(result, cwd, total_len);
+	ft_strlcat(result, GREEN " ➜ " RESET, total_len);
 	free(cwd);
 	return (result);
 }

@@ -23,9 +23,7 @@ static char	*get_cmd_path(t_cmd *cmd, t_shell *sh)
 		path = handle_local_cmd(cmd->args[0], sh->env);
 		if (!path)
 		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putendl_fd(": command not found", 2);
+			print_error(cmd->args[0], "command not found");
 			cleanup_and_exit_child(sh, NULL, NULL, 127);
 		}
 	}
@@ -40,29 +38,17 @@ static void	exec_cmd(t_cmd *cmd, t_shell *sh)
 		cleanup_and_exit_child(sh, NULL, NULL, 0);
 	if (cmd->args[0][0] == '\0')
 	{
-		ft_putendl_fd("minishell: : command not found", 2);
+		print_error("", "command not found");
 		cleanup_and_exit_child(sh, NULL, NULL, 127);
 	}
 	path = get_cmd_path(cmd, sh);
-	if (sh && sh->all_tokens)
-	{
-		free_tokens(sh->all_tokens);
-		sh->all_tokens = NULL;
-	}
-	if (sh && sh->all_cmds)
-	{
-		free_cmds(sh->all_cmds);
-		sh->all_cmds = NULL;
-	}
 	clear_history();
 	rl_clear_history();
 	cleanup_all_fds();
 	execve(path, cmd->args, sh->env);
 	if (errno == ENOEXEC || errno == EACCES)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(path, 2);
-		ft_putendl_fd(": command not found", 2);
+		print_error(path, "command not found");
 		free(path);
 		cleanup_and_exit_child(sh, NULL, NULL, 127);
 	}
@@ -85,6 +71,8 @@ static void	child_process(t_cmd *cmd, t_shell *sh, int in, int out)
 	}
 	if (handle_redir(cmd->redir, sh) != 0)
 		cleanup_and_exit_child(sh, NULL, NULL, 1);
+	if (!cmd->args || !cmd->args[0])
+		cleanup_and_exit_child(sh, NULL, NULL, 0);
 	if (is_builtin(cmd->args[0]))
 		cleanup_and_exit_child(sh, NULL, NULL, run_builtin(cmd, sh));
 	exec_cmd(cmd, sh);

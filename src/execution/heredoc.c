@@ -39,26 +39,26 @@ static void	write_to_pipe(int fd, char *delimiter)
 	}
 }
 
-static void	heredoc_child(char *delimiter, int write_fd)
+static void	heredoc_child(char *delimiter, int write_fd, t_shell *sh)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_IGN);
 	write_to_pipe(write_fd, delimiter);
 	close(write_fd);
-	cleanup_and_exit_child(NULL, NULL, NULL, 0);
+	cleanup_and_exit_child(sh, NULL, NULL, 0);
 }
 
-static pid_t	fork_heredoc(char *delimiter, int fd[2])
+static pid_t	fork_heredoc(char *delimiter, int fd[2], t_shell *sh)
 {
 	pid_t	pid;
 
 	pid = fork();
 	if (pid == 0)
-		heredoc_child(delimiter, fd[1]);
+		heredoc_child(delimiter, fd[1], sh);
 	return (pid);
 }
 
-int	create_heredoc(char *delimiter)
+int	create_heredoc(char *delimiter, t_shell *sh)
 {
 	int		fd[2];
 	pid_t	pid;
@@ -68,7 +68,7 @@ int	create_heredoc(char *delimiter)
 		return (-1);
 	if (pipe(fd) == -1)
 		return (-1);
-	pid = fork_heredoc(delimiter, fd);
+	pid = fork_heredoc(delimiter, fd, sh);
 	if (pid < 0)
 	{
 		close(fd[0]);

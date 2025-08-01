@@ -35,33 +35,6 @@ void	free_tokens(t_token *tok)
 	}
 }
 
-char	**ft_args_add(char **arr, char *new_arg)
-{
-	char	**new;
-	int		count;
-	int		i;
-
-	count = 0;
-	i = 0;
-	while (arr && arr[count])
-		count++;
-	new = malloc(sizeof(char *) * (count + 2));
-	if (!new)
-	{
-		free (new_arg);
-		return (NULL);
-	}
-	while (i < count)
-	{
-		new[i] = ft_strdup(arr[i]);
-		free(arr[i]);
-		i++;
-	}
-	new[count] = new_arg;
-	new[count + 1] = NULL;
-	free(arr);
-	return (new);
-}
 
 char	*strip_comments(char *line)
 {
