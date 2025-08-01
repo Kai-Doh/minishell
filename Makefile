@@ -20,7 +20,7 @@ INCDIR   = include
 LIBFTDIR = Libft
 
 # Source files organized by category
-CORE_SRCS = $(SRCDIR)/core/minishell.c $(SRCDIR)/core/prompt.c $(SRCDIR)/core/prompt_utils.c $(SRCDIR)/core/prompt_helpers.c $(SRCDIR)/core/signals.c $(SRCDIR)/core/readline_terminal.c
+CORE_SRCS = $(SRCDIR)/core/minishell.c $(SRCDIR)/core/prompt.c $(SRCDIR)/core/prompt_utils.c $(SRCDIR)/core/prompt_helpers.c $(SRCDIR)/core/signals.c
 
 BUILTIN_SRCS = $(SRCDIR)/builtin/dispatcher.c $(SRCDIR)/builtin/echo.c $(SRCDIR)/builtin/pwd.c $(SRCDIR)/builtin/cd.c $(SRCDIR)/builtin/cd_helpers.c $(SRCDIR)/builtin/exit.c $(SRCDIR)/builtin/env.c $(SRCDIR)/builtin/env_operations.c $(SRCDIR)/builtin/env_core.c $(SRCDIR)/builtin/env_utils.c $(SRCDIR)/builtin/env_helpers.c $(SRCDIR)/builtin/env_extract.c $(SRCDIR)/builtin/env_setters.c $(SRCDIR)/builtin/export.c $(SRCDIR)/builtin/unset.c
 
@@ -28,7 +28,7 @@ PARSING_SRCS = $(SRCDIR)/parsing/lexer.c $(SRCDIR)/parsing/lexer_token.c $(SRCDI
 
 EXECUTION_SRCS = $(SRCDIR)/execution/exec.c $(SRCDIR)/execution/exec_utils.c $(SRCDIR)/execution/exec_helpers.c $(SRCDIR)/execution/exec_cmd_handlers.c $(SRCDIR)/execution/heredoc_cleanup.c $(SRCDIR)/execution/path.c $(SRCDIR)/execution/redir_utils.c $(SRCDIR)/execution/heredoc.c $(SRCDIR)/execution/heredoc_utils.c $(SRCDIR)/execution/process_wait.c
 
-UTILS_SRCS = $(SRCDIR)/utils/utils.c $(SRCDIR)/utils/path_utils.c $(SRCDIR)/utils/free_cmds.c $(SRCDIR)/utils/input_utils.c $(SRCDIR)/utils/variable_assignment.c $(SRCDIR)/utils/shlvl_utils.c $(SRCDIR)/utils/string_utils.c $(SRCDIR)/utils/wildcard_expansion.c $(SRCDIR)/utils/error_utils.c $(SRCDIR)/utils/cleanup_utils.c
+UTILS_SRCS = $(SRCDIR)/utils/utils.c $(SRCDIR)/utils/path_utils.c $(SRCDIR)/utils/free_cmds.c $(SRCDIR)/utils/input_utils.c $(SRCDIR)/utils/variable_assignment.c $(SRCDIR)/utils/shlvl_utils.c $(SRCDIR)/utils/string_utils.c $(SRCDIR)/utils/wildcard_expansion.c $(SRCDIR)/utils/error_utils.c
 
 # All source files
 SRCS = $(CORE_SRCS) $(BUILTIN_SRCS) $(PARSING_SRCS) $(EXECUTION_SRCS) $(UTILS_SRCS)

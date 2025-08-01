@@ -114,7 +114,6 @@ typedef struct s_shell
 /* ************************************************************************** */
 
 void	start_shell_loop(t_shell *sh);
-char	*safe_readline(const char *prompt_str);
 
 /* ************************************************************************** */
 /*                                    Lexer                                   */

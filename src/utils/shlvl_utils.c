@@ -44,7 +44,10 @@ static void	set_shlvl_value(t_shell *sh, int shlvl_idx, char *new_entry)
 		new_env = ft_strs_add(sh->env, new_entry);
 		free(new_entry);
 		if (new_env)
+		{
+			ft_free_split(sh->env);
 			sh->env = new_env;
+		}
 	}
 }
 
