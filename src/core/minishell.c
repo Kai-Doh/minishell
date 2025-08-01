@@ -37,6 +37,6 @@ int	main(int argc, char **argv, char **env)
 	cleanup_heredoc_tracking(&sh);
 	cleanup_all_fds();
 	ft_free_split(sh.env);
-	clear_history();
+	rl_clear_history();
 	return (sh.last_exit_status);
 }

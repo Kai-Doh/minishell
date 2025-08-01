@@ -45,6 +45,10 @@ static void	heredoc_child(char *delimiter, int write_fd, t_shell *sh)
 	signal(SIGQUIT, SIG_IGN);
 	write_to_pipe(write_fd, delimiter);
 	close(write_fd);
+	if (sh->all_tokens)
+		free_tokens(sh->all_tokens);
+	if (sh->all_cmds)
+		free_cmds(sh->all_cmds);
 	if (sh->env)
 		ft_free_split(sh->env);
 	sh->env = NULL;
@@ -89,6 +93,5 @@ int	create_heredoc(char *delimiter, t_shell *sh)
 		close(fd[0]);
 		return (-1);
 	}
-	fcntl(fd[0], F_SETFD, FD_CLOEXEC);
 	return (fd[0]);
 }

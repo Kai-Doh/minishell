@@ -17,14 +17,14 @@ static char	*get_cmd_path(t_cmd *cmd, t_shell *sh)
 	char	*path;
 
 	if (ft_strchr(cmd->args[0], '/'))
-		path = handle_path_cmd(cmd->args[0]);
+		path = handle_path_cmd(cmd->args[0], sh);
 	else
 	{
 		path = handle_local_cmd(cmd->args[0], sh->env);
 		if (!path)
 		{
 			print_error(cmd->args[0], "command not found");
-			cleanup_and_exit_child(sh, NULL, NULL, 127);
+			cleanup_and_exit_child(sh, sh->all_cmds, sh->all_tokens, 127);
 		}
 	}
 	return (path);
@@ -35,14 +35,13 @@ static void	exec_cmd(t_cmd *cmd, t_shell *sh)
 	char	*path;
 
 	if (!cmd->args || !cmd->args[0])
-		cleanup_and_exit_child(sh, NULL, NULL, 0);
+		cleanup_and_exit_child(sh, sh->all_cmds, sh->all_tokens, 0);
 	if (cmd->args[0][0] == '\0')
 	{
 		print_error("", "command not found");
-		cleanup_and_exit_child(sh, NULL, NULL, 127);
+		cleanup_and_exit_child(sh, sh->all_cmds, sh->all_tokens, 127);
 	}
 	path = get_cmd_path(cmd, sh);
-	clear_history();
 	rl_clear_history();
 	cleanup_all_fds();
 	execve(path, cmd->args, sh->env);
@@ -50,15 +49,17 @@ static void	exec_cmd(t_cmd *cmd, t_shell *sh)
 	{
 		print_error(path, "command not found");
 		free(path);
-		cleanup_and_exit_child(sh, NULL, NULL, 127);
+		cleanup_and_exit_child(sh, sh->all_cmds, sh->all_tokens, 127);
 	}
 	perror(path);
 	free(path);
-	cleanup_and_exit_child(sh, NULL, NULL, 126);
+	cleanup_and_exit_child(sh, sh->all_cmds, sh->all_tokens, 126);
 }
 
 static void	child_process(t_cmd *cmd, t_shell *sh, int in, int out)
 {
+	int	exit_code;
+
 	if (in != STDIN_FILENO)
 	{
 		dup2(in, STDIN_FILENO);
@@ -70,11 +71,14 @@ static void	child_process(t_cmd *cmd, t_shell *sh, int in, int out)
 		close(out);
 	}
 	if (handle_redir(cmd->redir, sh) != 0)
-		cleanup_and_exit_child(sh, NULL, NULL, 1);
+		cleanup_and_exit_child(sh, sh->all_cmds, sh->all_tokens, 1);
 	if (!cmd->args || !cmd->args[0])
-		cleanup_and_exit_child(sh, NULL, NULL, 0);
+		cleanup_and_exit_child(sh, sh->all_cmds, sh->all_tokens, 0);
 	if (is_builtin(cmd->args[0]))
-		cleanup_and_exit_child(sh, NULL, NULL, run_builtin(cmd, sh));
+	{
+		exit_code = run_builtin(cmd, sh);
+		cleanup_and_exit_child(sh, sh->all_cmds, sh->all_tokens, exit_code);
+	}
 	exec_cmd(cmd, sh);
 }
 

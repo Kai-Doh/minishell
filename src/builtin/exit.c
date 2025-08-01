@@ -78,12 +78,19 @@ void	cleanup_and_exit_child(t_shell *sh, t_cmd *cmds, t_token *tokens,
 		int exit_code)
 {
 	if (cmds)
+	{
 		free_cmds(cmds);
+		if (sh && sh->all_cmds == cmds)
+			sh->all_cmds = NULL;
+	}
 	if (tokens)
+	{
 		free_tokens(tokens);
+		if (sh && sh->all_tokens == tokens)
+			sh->all_tokens = NULL;
+	}
 	if (sh)
 		cleanup_shell_resources(sh);
-	clear_history();
 	rl_clear_history();
 	cleanup_all_fds();
 	exit(exit_code);

@@ -151,7 +151,7 @@ int		validate_syntax(t_token *tok, t_shell *sh);
 int		execute(t_cmd *cmd, t_shell *sh);
 int		execute_pipeline(t_cmd *cmd, t_shell *sh);
 pid_t	pipe_and_fork(t_cmd *cmd, t_shell *sh, int *in);
-char	*handle_path_cmd(char *cmd_name);
+char	*handle_path_cmd(char *cmd_name, t_shell *sh);
 char	*handle_local_cmd(char *cmd_name, char **env);
 void	wait_all(pid_t last_pid, t_shell *sh);
 void	restore_fds(int save_in, int save_out);
